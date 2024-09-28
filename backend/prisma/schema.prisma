@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String    @unique
+  email       String    @unique
+  password    String
+  role        Role      @default(USER)
+  addresses   Address[]
+  orders      Order[]
+  messages    Message[]
+}
+
+model Address {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  user          User    @relation(fields: [userId], references: [id])
+  address       String
+  addressNumber String
+  floorNumber   String?
+  isPrimary     Boolean @default(false)
+  Order         Order[]
+}
+
+model Food {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String? // Optional field for additional details like ingredients
+  price       Decimal
+  imageUrl    String
+  category    FoodCategory @default(GLAVNO_JELO)
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  addressId  Int
+  user       User        @relation(fields: [userId], references: [id])
+  address    Address     @relation(fields: [addressId], references: [id])
+  status     OrderStatus @default(CREATED)
+  totalPrice Decimal
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id       Int     @id @default(autoincrement())
+  orderId  Int
+  foodId   Int
+  order    Order   @relation(fields: [orderId], references: [id])
+  food     Food    @relation(fields: [foodId], references: [id])
+  quantity Int
+  price    Decimal
+}
+
+model Message {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  user      User        @relation(fields: [userId], references: [id])
+  message   String
+  createdAt DateTime    @default(now())
+  type      MessageType
+}
+
+model RevokedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  WORKER
+  ADMIN
+}
+
+enum OrderStatus {
+  CREATED
+  ACCEPTED
+  REJECTED
+  IN_DELIVERY
+  DELIVERED
+}
+
+enum FoodCategory {
+  PREDJELO
+  GLAVNO_JELO
+  DESERT
+  NAPITAK
+  PRILOG
+  SALATA
+  JUHA
+}
+
+enum MessageType {
+  ORDER_CREATED
+  ORDER_ACCEPTED
+  ORDER_REJECTED
+  ORDER_DELIVERED
+  SYSTEM_NOTIFICATION
+}
