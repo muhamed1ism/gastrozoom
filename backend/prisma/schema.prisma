@@ -26,52 +26,56 @@ model User {
 }
 
 model Address {
-  id            Int     @id @default(autoincrement())
-  userId        Int
-  user          User    @relation(fields: [userId], references: [id])
-  address       String
-  addressNumber String
-  floorNumber   String?
-  isPrimary     Boolean @default(false)
-  Order         Order[]
+  id               Int     @id @default(autoincrement())
+  userId           Int
+  user             User    @relation(fields: [userId], references: [id])
+  address          String
+  addressNumber    String
+  floorNumber      String?
+  isSelectedOnDoor Boolean @default(false)
+  isPrimary        Boolean @default(false)
 }
 
 model Food {
   id          Int          @id @default(autoincrement())
   name        String
   description String? // Optional field for additional details like ingredients
-  price       Decimal
+  price       Float
   imageUrl    String
   category    FoodCategory @default(GLAVNO_JELO)
-  orderItems  OrderItem[]
 }
 
 model Order {
-  id         Int         @id @default(autoincrement())
-  userId     Int
-  addressId  Int
-  user       User        @relation(fields: [userId], references: [id])
-  address    Address     @relation(fields: [addressId], references: [id])
-  status     OrderStatus @default(CREATED)
-  totalPrice Decimal
-  orderItems OrderItem[]
+  id            Int         @id @default(autoincrement())
+  userId        Int
+  addressId     Int
+  user          User        @relation(fields: [userId], references: [id])
+  address       String
+  addressNumber String
+  floorNumber   String?
+  status        OrderStatus @default(CREATED)
+  totalPrice    Float
+  createdAt     DateTime    @default(now())
+  orderItems    OrderItem[]
 }
 
 model OrderItem {
-  id       Int     @id @default(autoincrement())
-  orderId  Int
-  foodId   Int
-  order    Order   @relation(fields: [orderId], references: [id])
-  food     Food    @relation(fields: [foodId], references: [id])
-  quantity Int
-  price    Decimal
+  id         Int    @id @default(autoincrement())
+  orderId    Int
+  foodId     Int
+  foodName   String
+  foodPrice  Float
+  order      Order  @relation(fields: [orderId], references: [id])
+  quantity   Int
+  totalPrice Float
 }
 
 model Message {
   id        Int         @id @default(autoincrement())
   userId    Int
   user      User        @relation(fields: [userId], references: [id])
-  message   String
+  title     String
+  text      String
   createdAt DateTime    @default(now())
   type      MessageType
 }

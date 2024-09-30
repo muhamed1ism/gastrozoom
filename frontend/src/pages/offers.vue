@@ -44,7 +44,6 @@ const filteredFoods = computed(() => {
 
 <template>
   <v-container fluid>
-
     <v-row class="d-flex align-center py-6" justify="center">
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton/>
@@ -83,6 +82,11 @@ const filteredFoods = computed(() => {
       </v-col>
     </v-row>
     <v-row class="pb-16">
+      <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3"
+             class="d-flex justify-center mb-2" v-if="foods.length === 0"
+      >
+        <h1 class="text-h4 text-sm-h3 text-primary text-center">Nema ponuda</h1>
+      </v-col>
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3" v-for="food in filteredFoods">
         <FoodCard :id="food.id" :image-src="food.imageUrl" :title="food.name" :price="food.price"/>
       </v-col>

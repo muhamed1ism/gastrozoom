@@ -1,78 +1,87 @@
 const express = require('express');
 const prisma = require('../config/prisma');
 const router = express.Router();
+const authenticateToken = require("../middleware/authenticateToken");
+const authorizeAdmin = require("../middleware/authorizeAdmin");
 
 // Get all messages
-router.get('/all', async (req, res) => {
+router.get('/all', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
   try {
-    const messages = await prisma.message.findMany();
+    const messages = await prisma.message.findMany({
+      where: { userId  },
+    });
     res.status(200).json(messages);
   } catch (error) {
-    res.status(500).json({ error: 'Fetching messages failed' });
+    console.error('Error: ', error);
+    res.status(500).json({ error: 'Dohvat poruka nije uspio' });
   }
 });
 
 // Get message by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
   const { id } = req.params;
   try {
     const message = await prisma.message.findUnique({
-      where: { id: Number(id) },
+      where: {
+        userId,
+        id: Number(id)
+      },
     });
     res.status(200).json(message);
   } catch (error) {
-    res.status(500).json({ error: 'Fetching message failed' });
+    console.error('Error: ', error);
+    res.status(500).json({ error: 'Dohvat poruke nije uspio' });
   }
 });
 
 // Create a new system message
-router.post('/create', async (req, res) => {
-  const { userId, message } = req.body;
+router.post('/create', authenticateToken, authorizeAdmin, async (req, res) => {
+  const { title, text } = req.body;
 
-  if (!message) {
-    return res.status(400).json({ message: 'Message is required' });
+  if (!title || !text) {
+    return res.status(400).json({ error: 'Poruka je obavezna' });
   }
 
   try {
-    const newMessage = await prisma.message.create({
-      data: {
-        userId,
-        message,
-        type: 'SYSTEM_NOTIFICATION',
-      },
+    const users = await prisma.user.findMany({
+      select: { id: true },
     });
+
+    const newMessage = await prisma.$transaction(
+      users.map(user => prisma.message.create({
+        data: {
+          userId: user.id,
+          title,
+          text,
+          type: 'SYSTEM_NOTIFICATION',
+        },
+      }))
+    );
 
     res.status(201).json(newMessage);
   } catch (error) {
-    res.status(500).json({ error: 'Creating message failed' });
-  }
-});
-
-// Update message by ID
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const { message, type } = req.body;
-  try {
-    const updatedMessage = await prisma.message.update({
-      where: { id: Number(id) },
-      data: { message, type },
-    });
-    res.status(200).json(updatedMessage);
-  } catch (error) {
-    res.status(500).json({ error: 'Updating message failed' });
+    console.error('Error: ', error);
+    res.status(500).json({ error: 'Kreiranje poruke nije uspjelo' });
   }
 });
 
 // Delete message by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
   const { id } = req.params;
   try {
     await prisma.message.delete({
-      where: { id: Number(id) },
+      where: {
+        userId,
+        id: Number(id)
+      },
     });
-    res.status(200).json({ message: 'Message deleted' });
+    res.status(200).json({ message: 'Poruka je uspešno obrisana' });
   } catch (error) {
-    res.status(500).json({ error: 'Deleting message failed' });
+    console.error('Error: ', error);
+    res.status(500).json({ error: 'Brisanje poruke nije uspjelo' });
   }
 });
 

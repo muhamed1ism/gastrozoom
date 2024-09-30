@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 
-const apiUrl = import.meta.env.VITE_API_URL_ORDERS;
+const apiUrl = 'http://localhost:4000/order';
 
 export const useOrderStore = defineStore('order', {
   state: () => ({
@@ -11,11 +11,29 @@ export const useOrderStore = defineStore('order', {
   }),
 
   actions: {
-    async fetchOrders() {
+    async fetchAllOrders() {
       try {
         const authStore = useAuthStore();
         const token = authStore.auth.token;
         const res = await axios.get(`${apiUrl}/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          this.orders = res.data;
+        }
+      } catch (error) {
+        console.log("Failed to fetch orders: ", error);
+        throw error;
+      }
+    },
+
+    async fetchUserOrders() {
+      try {
+        const authStore = useAuthStore();
+        const token = authStore.auth.token;
+        const res = await axios.get(`${apiUrl}/user-all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

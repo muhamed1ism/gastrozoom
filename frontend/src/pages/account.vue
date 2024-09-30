@@ -6,18 +6,11 @@ import router from "@/router";
 
 const authStore = useAuthStore();
 
-const profile = ref({});
-
 onMounted(async () => {
   await authStore.getProfile();
 });
 
 const menuItems = [
-  {
-    title: 'Uredi profil',
-    prependIcon: 'mdi-account-edit',
-    link: '/account/manage'
-  },
   {
     title: 'Moje narudžbe',
     prependIcon: 'mdi-cart',
@@ -48,6 +41,14 @@ const adminMenuItems = [
   },
 ];
 
+const workerMenuItems = [
+  {
+    title: 'Upravljanje narudžbama',
+    prependIcon: 'mdi-cart-arrow-down',
+    link: '/worker/orders'
+  },
+];
+
 const logout = async () => {
   try {
     await authStore.logout();
@@ -66,10 +67,19 @@ const logout = async () => {
         <v-icon size="6rem">mdi-account-circle</v-icon>
         <div class="d-flex flex-column pa-4 responsive-text">
           <h4 class="text-h6 text-sm-h5 text-md-h4 font-weight-medium text-truncate">{{ authStore.user.name }}</h4>
-          <span class="text-caption text-sm-subtitle-2 text-md-subtitle-1 text-medium-emphasis text-truncate">{{ authStore.user.email }}</span>
+          <span class="text-caption text-sm-subtitle-2 text-md-subtitle-1 text-medium-emphasis text-truncate">
+            {{ authStore.user.email }}
+          </span>
         </div>
       </v-col>
-      <v-col v-if="authStore.auth.role === 'ADMIN'" v-for="item in adminMenuItems" cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
+      <v-col v-if="authStore.auth.role === 'ADMIN'" v-for="item in workerMenuItems" cols="12" sm="10" md="8" lg="6"
+             offset-sm="1" offset-md="2" offset-lg="3"
+      >
+        <AccountMenuCard :link="item.link" :prepend-icon="item.prependIcon" :title="item.title"/>
+      </v-col>
+      <v-col v-if="authStore.auth.role === 'WORKER' || authStore.auth.role === 'ADMIN'" v-for="item in adminMenuItems" cols="12" sm="10" md="8"
+             lg="6" offset-sm="1" offset-md="2" offset-lg="3"
+      >
         <AccountMenuCard :link="item.link" :prepend-icon="item.prependIcon" :title="item.title"/>
       </v-col>
       <v-col v-for="item in menuItems" cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">

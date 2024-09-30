@@ -7,7 +7,7 @@ router.post('/create', async function(req, res) {
   const { name, description, price, category, imageUrl } = req.body;
 
   if (name.trim() === '' || !price) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ error: 'Sva polja su obavezna' });
   }
 
   try {
@@ -23,7 +23,7 @@ router.post('/create', async function(req, res) {
 
     res.status(201).json(newFood);
   } catch (error) {
-    res.status(500).json({ error: 'Creating food failed' });
+    res.status(500).json({ error: 'Kreiranje hrane nije uspjelo' });
   }
 });
 
@@ -34,7 +34,7 @@ router.get('/all', async function(req, res) {
 
     res.status(200).json(foods);
   } catch (error) {
-    res.status(500).json({ error: 'Fetching foods failed' });
+    res.status(500).json({ error: 'Doahvat hrane nije uspio' });
   }
 });
 
@@ -51,7 +51,7 @@ router.get('/:id', async function(req, res) {
 
     res.status(200).json(food);
   } catch (error) {
-    res.status(500).json({ error: 'Fetching food failed' });
+    res.status(500).json({ error: 'Dohvat hrane nije uspio' });
   }
 });
 
@@ -61,7 +61,7 @@ router.put('/:id', async function(req, res) {
   const { name, description, price, category } = req.body;
 
   if (!name || !price || !category) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ error: 'Sva polja su obavezna' });
   }
 
   try {
@@ -79,7 +79,7 @@ router.put('/:id', async function(req, res) {
 
     res.status(200).json(updatedFood);
   } catch (error) {
-    res.status(500).json({ error: 'Updating food failed' });
+    res.status(500).json({ error: 'Ažuriranje hrane nije uspjelo' });
   }
 });
 
@@ -96,7 +96,7 @@ router.delete('/:id', async function(req, res) {
 
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: 'Deleting food failed' });
+    res.status(500).json({ error: 'Brisanje hrane nije uspjelo' });
   }
 });
 

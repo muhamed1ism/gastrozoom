@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 
-const apiUrl = import.meta.env.VITE_API_URL_ADDRESSES;
+const apiUrl = 'http://localhost:4000/address';
 
 export const useAddressStore = defineStore('address', {
   state: () => ({
@@ -24,7 +24,7 @@ export const useAddressStore = defineStore('address', {
           this.addresses = res.data;
         }
       } catch (error) {
-        console.log("Failed to fetch addresses: ", error);
+        console.log("Failed to fetch all addresses: ", error);
         throw error;
       }
     },
@@ -43,6 +43,24 @@ export const useAddressStore = defineStore('address', {
         }
       } catch (error) {
         console.log("Failed to fetch address: ", error);
+        throw error;
+      }
+    },
+
+    async fetchPrimaryAddress() {
+      try {
+        const authStore = useAuthStore();
+        const token = authStore.auth.token;
+        const res = await axios.get(`${apiUrl}/primary`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          this.address = res.data;
+        }
+      } catch (error) {
+        console.log("Failed to fetch primary address: ", error);
         throw error;
       }
     },

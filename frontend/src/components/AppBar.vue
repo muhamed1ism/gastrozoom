@@ -24,6 +24,13 @@ const guestItems = [
     color: 'primary',
   },
   {
+    id: 'about',
+    text: 'O nama',
+    icon: 'mdi-information',
+    to: '/about',
+    color: 'primary',
+  },
+  {
     id: 'login',
     text: 'Prijava',
     icon: 'mdi-login',
@@ -98,19 +105,22 @@ onMounted(() => {
 
     <v-spacer/>
 
-    <v-btn
-      v-for="button in (isAuthenticated ? userItems : guestItems)"
-      :key="button.id"
-      :color="button.color"
-      class="me-2 text-none"
-      :class="button.color === 'white' ? 'text-primary' : 'text-white'"
-      variant="flat"
-      rounded="lg"
-      :to="button.to"
-      :prepend-icon="button.icon"
-    >
-      <span>{{ button.text }}</span>
-    </v-btn>
+    <div v-for="button in (isAuthenticated ? userItems : guestItems)">
+      <v-btn
+        :key="button.id"
+        :color="button.color"
+        class="mr-2 text-none"
+        :class="button.color === 'white' ? 'text-primary' : 'text-white'"
+        variant="flat"
+        rounded="lg"
+        :to="button.to"
+        :prepend-icon="button.icon"
+      >
+        <span>{{ button.text }}</span>
+      </v-btn>
+      <v-btn v-if="button.id === 'account'" icon="mdi-cart" variant="plain" class="ml-2 mr-4 custom-radius" to="/order"/>
+    </div>
+
     <v-btn v-if="isAuthenticated" @click="logout" color="secondary" class="me-2 text-none" variant="outlined" rounded="lg">
       <v-icon>mdi-logout</v-icon>
       <span>Odjava</span>

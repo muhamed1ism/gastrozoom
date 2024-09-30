@@ -24,7 +24,7 @@ onMounted(async () => {
 const submit = async () => {
   try {
     await addressStore.createAddress(form.value);
-    await router.push('/address');
+    await router.push('/order/address/select');
     window.location.reload();
   } catch (error) {
     console.log(error);

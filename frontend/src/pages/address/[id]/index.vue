@@ -1,44 +1,76 @@
 <script setup>
 import BackButton from "@/components/BackButton.vue";
+import {useAddressStore} from "@/stores/address";
+import {useRoute} from "vue-router";
 
+const route = useRoute();
+const address = ref({});
+const addressId = route.params.id;
+
+const addressStore = useAddressStore();
+
+onMounted(async () => {
+  await addressStore.fetchAddressById(addressId);
+  await addressStore.fetchAddresses();
+  address.value = addressStore.address;
+  console.log(address.value);
+});
+
+watch(
+  () => address.value.isPrimary,
+  (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      addressStore.updateAddress(addressId, address.value);
+    }
+  }
+)
 </script>
 
 <template>
-  <v-container fluid class="fill-height">
-    <v-row class="pb-8">
-        <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3" class="d-flex">
-          <BackButton />
-        </v-col>
+  <v-container fluid>
+    <v-row class="d-flex align-center py-6" justify="center">
+      <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
+        <BackButton />
+        <div class="d-flex align-center pl-6">
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Moja adresa</h1>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="10" sm="8" md="6" lg="4" offset="1" offset-sm="2" offset-md="3" offset-lg="4">
         <v-card variant="text">
-          <v-icon size="8rem" class="text-center text-primary w-100 mb-4">mdi-map-marker</v-icon>
-          <v-card-title class="text-h4 text-center font-weight-medium pb-12">Moja adresa</v-card-title>
+          <v-icon size="8rem" class="text-center text-primary w-100 mb-10">mdi-map-marker</v-icon>
           <v-card-text>
             <h6 class="text-h6 font-weight-bold">Naziv ulice</h6>
-            <h5 class="text-h5">Adresa 123 ulica </h5>
+            <h5 class="text-h5">{{ address.address }}</h5>
           </v-card-text>
 
           <v-row>
             <v-col cols="6">
               <v-card-text>
-                <h6 class="text-h6 font-weight-bold">Broj ulice</h6>
-                <h5 class="text-h5">57</h5>
+                <h6 class="text-h6 font-weight-bold">Kućni broj</h6>
+                <h5 class="text-h5">{{ address.addressNumber }}</h5>
               </v-card-text>
             </v-col>
             <v-col cols="6">
               <v-card-text>
                 <h6 class="text-h6 font-weight-bold">Kat</h6>
-                <h5 class="text-h5">2</h5>
+                <h5 class="text-h5">{{ address.floorNumber }}</h5>
               </v-card-text>
             </v-col>
           </v-row>
 
-          <div class="d-flex justify-space-between mx-2 align-center">
+          <v-card-text>
+            <h6 class="text-h6 font-weight-bold">Način dostave</h6>
+            <h5 class="text-h5">{{ address.isSelectedOnDoor ? 'Dostaviti na vratima' : 'Preuzet ću ja' }}</h5>
+          </v-card-text>
+
+          <div v-if="addressStore.addresses.length > 1" class="d-flex justify-space-between mx-2 align-center">
             <span>Postavi kao zadanu adresu</span>
-            <v-switch color="primary" class="ml-2 mt-6"/>
+            <v-switch color="primary" class="ml-2 mt-6" v-model="address.isPrimary"/>
           </div>
 
-          <v-btn type="submit" prepend-icon="mdi-pencil" block variant="flat" color="primary" size="large" class="mb-8 mt-2" rounded>
+          <v-btn type="submit" :to="`/address/${addressId}/edit`" prepend-icon="mdi-pencil" block variant="flat" color="primary" size="large" class="mb-8 mt-4" rounded>
             Uredi adresu
           </v-btn>
         </v-card>

@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const authRouter = require('./routes/auth');
 const foodRouter = require('./routes/food');
+const addressRouter = require('./routes/address');
+const orderRouter = require('./routes/order');
+const messageRouter = require('./routes/message');
 
 const app = express();
 
@@ -14,6 +17,9 @@ app.use(cors());
 
 app.use('/auth', authRouter);
 app.use('/food', foodRouter);
+app.use('/address', addressRouter);
+app.use('/order', orderRouter);
+app.use('/message', messageRouter);
 
 const PORT = 4000;
 

@@ -2,12 +2,66 @@
 import BackButton from "@/components/BackButton.vue";
 import { ref } from "vue";
 import OrderFoodCard from "@/components/OrderFoodCard.vue";
+import {useBasketStore} from "@/stores/basket";
+import {useAddressStore} from "@/stores/address";
+import {useRouter} from "vue-router";
 
-const search = ref("");
+const router = useRouter();
+
+const deliveryPrice = ref(2.5);
+const foods = ref([]);
+
+const basketStore = useBasketStore();
+const addressStore = useAddressStore();
+
+const priceWithoutDelivery = computed(() => {
+  return foods.value.reduce((total, food) => {
+    return total += food.price * basketStore.getFoodQuantity(food.id);
+  }, 0);
+});
+
+const totalPrice = computed(() => {
+  return priceWithoutDelivery.value + deliveryPrice.value;
+});
+
+const createOrder = async () => {
+  try {
+    await addressStore.fetchAddresses();
+    if (addressStore.addresses.length > 0) {
+      await router.push('/order/address/select');
+      window.location.reload();
+    } else {
+      await router.push('/order/address/add');
+      window.location.reload();
+    }
+  } catch (error) {
+      throw error;
+  }
+};
+
+onMounted(async () => {
+  await basketStore.fetchBasketFoods();
+  foods.value = basketStore.basket.foods;
+  console.log(foods.value);
+});
+
+const removeFoodFromBasket = async (foodId) => {
+  await basketStore.removeFoodFromBasket(foodId);
+};
+
+watch(
+  () => basketStore.basket.basketItems,
+  async () => {
+    await basketStore.fetchBasketFoods();
+    foods.value = basketStore.basket.foods;
+  }
+);
 </script>
 
 <template>
-  <v-container class="d-flex flex-column" style="height: calc(100vh - 64px)">
+  <v-container fluid class="d-flex flex-column"
+               :style="basketStore.basket.basketItems.length > 0 ? 'height: calc(100vh - 64px)' : ''"
+  >
     <v-row class="d-flex align-center py-4" justify="center">
       <v-col cols="11" md="8" lg="6" class="d-flex">
         <BackButton />
@@ -16,51 +70,38 @@ const search = ref("");
         </div>
       </v-col>
     </v-row>
-    <v-row justify="center" class="pb-4">
-      <v-col cols="11" md="8" lg="6" class="d-flex">
-        <v-text-field
-          v-model="search"
-          class="custom-text-field elevation-0 bg-secondary rounded-xl pl-8 pr-4"
-          append-inner-icon="mdi-magnify"
-          label="Pretraži"
-          variant="plain"
-          density="comfortable"
-          clearable
-          rounded
-          hide-details
-        />
-        <v-btn icon="mdi-filter-variant" class="ml-6 custom-radius" color="primary" variant="tonal" />
-      </v-col>
-    </v-row>
-    <v-row justify="center">
+
+    <v-row v-if="foods.length === 0" justify="center">
       <v-col cols="11" md="8" lg="6">
-        <OrderFoodCard />
-        <OrderFoodCard />
-        <OrderFoodCard />
+        <h3 class="text-center text-primary text-h3">Korpa je prazna</h3>
       </v-col>
     </v-row>
 
-    <v-row justify="center" align="end" class="pt-1">
+    <v-row v-for="food in foods" justify="center">
+      <v-col :key="food.id" cols="11" md="8" lg="6">
+        <OrderFoodCard :id="food.id" :title="food.name" :price="food.price" :src="food.imageUrl"
+                       :removeFoodFromBasket="removeFoodFromBasket"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="basketStore.basket.basketItems.length > 0" justify="center" align="end" class="pt-1">
       <v-col cols="11" md="8" lg="6">
         <v-card class="bg-primary d-flex flex-column pa-3" rounded="xl">
           <v-card-text class=" d-flex justify-space-between">
             <span>Iznos:</span>
-            <span>29KM</span>
+            <span>{{ priceWithoutDelivery }} KM</span>
           </v-card-text>
           <v-card-text class=" d-flex justify-space-between">
             <span>Dostava:</span>
-            <span>29KM</span>
-          </v-card-text>
-          <v-card-text class=" d-flex justify-space-between">
-            <span>Popust:</span>
-            <span>29KM</span>
+            <span>{{ deliveryPrice }} KM</span>
           </v-card-text>
           <v-divider opacity="60%" class="text-white"></v-divider>
           <v-card-text class=" d-flex justify-space-between">
             <span>Za platiti:</span>
-            <span>29KM</span>
+            <span>{{ totalPrice }} KM</span>
           </v-card-text>
-          <v-btn class="mx-2 mb-2 text-primary" variant="flat" rounded size="x-large">Gotovo</v-btn>
+          <v-btn class="mx-2 mb-2 text-primary" variant="flat" rounded size="x-large" @click="createOrder">Gotovo</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -68,7 +109,4 @@ const search = ref("");
 </template>
 
 <style scoped>
-.custom-radius {
-  border-radius: 16px;
-}
 </style>
