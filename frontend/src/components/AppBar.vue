@@ -166,12 +166,4 @@ onMounted(() => {
 .custom-shadow {
   box-shadow: 0 0 32px 8px #ECEFF1;
 }
-
-.fixed-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
 </style>
