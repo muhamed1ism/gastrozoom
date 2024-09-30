@@ -5,10 +5,12 @@ import BackButton from "@/components/BackButton.vue";
 import {useOrderStore} from "@/stores/order";
 import {useBasketStore} from "@/stores/basket";
 import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const addressStore = useAddressStore();
 const basketStore = useBasketStore();
 const orderStore = useOrderStore();
+const authStore = useAuthStore();
 
 const primaryAddress = reactive({});
 const allAddresses = ref([]);
@@ -21,6 +23,7 @@ const setAddresses = () => {
 };
 
 onMounted(async () => {
+  if (!authStore.auth.isAuthenticated) await router.push('/login');
   await addressStore.fetchAddresses();
   await addressStore.fetchPrimaryAddress();
   setAddresses();

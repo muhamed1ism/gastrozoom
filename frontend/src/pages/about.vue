@@ -16,7 +16,7 @@ import BackButton from "@/components/BackButton.vue";
     <v-card variant="text" class="py-md-16 my-md-16">
       <v-row justify="center" align="center">
         <v-col cols="12" sm="10" md="4">
-          <v-img src="" height="20rem" class="bg-grey-lighten-2 ma-8 custom-radius">
+          <v-img src="/about.svg" height="30rem" class="ma-8 custom-radius">
             <template #placeholder>
               <v-icon class="fill-height w-100" size="4rem">mdi-image</v-icon>
             </template>

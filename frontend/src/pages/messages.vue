@@ -2,13 +2,18 @@
 
 import BackButton from "@/components/BackButton.vue";
 import {useMessageStore} from "@/stores/message";
+import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const messageStore = useMessageStore();
+const authStore = useAuthStore();
+
 const messages = ref([]);
 
 onMounted(async () => {
   await messageStore.fetchMessages();
   messages.value = messageStore.messages;
+  if (!authStore.auth.isAuthenticated) await router.push('/login');
 });
 
 const formatDate = (date) => {

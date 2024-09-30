@@ -58,6 +58,10 @@ const logout = async () => {
     throw error;
   }
 }
+
+onMounted(async () => {
+  if (!authStore.auth.isAuthenticated) await router.push('/login');
+})
 </script>
 
 <template>

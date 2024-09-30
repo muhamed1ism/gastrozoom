@@ -40,9 +40,9 @@ const submit = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   isAuthenticated.value = authStore.auth.isAuthenticated;
-  if (isAuthenticated.value) router.push('/');
+  if (isAuthenticated.value) await router.push('/');
 })
 </script>
 

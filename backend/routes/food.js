@@ -1,9 +1,11 @@
 const express = require('express');
 const prisma = require('../config/prisma');
 const router = express.Router();
+const authenticateToken = require('../middleware/authenticateToken');
+const authorizeAdmin = require('../middleware/authorizeAdmin');
 
 // create new food
-router.post('/create', async function(req, res) {
+router.post('/create', authenticateToken, authorizeAdmin, async function(req, res) {
   const { name, description, price, category, imageUrl } = req.body;
 
   if (name.trim() === '' || !price) {
@@ -56,7 +58,7 @@ router.get('/:id', async function(req, res) {
 });
 
 // update food by id
-router.put('/:id', async function(req, res) {
+router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
   const { id } = req.params;
   const { name, description, price, category } = req.body;
 
@@ -84,7 +86,7 @@ router.put('/:id', async function(req, res) {
 });
 
 // delete food by id
-router.delete('/:id', async function(req, res) {
+router.delete('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
   const { id } = req.params;
 
   try {

@@ -57,6 +57,8 @@
 <script setup>
 
 import BackButton from "@/components/BackButton.vue";
+import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const foods = ref([]);
 const search = ref("");
@@ -88,6 +90,12 @@ const formatDate = (date) => {
   const newDate = new Date(date);
   return new Intl.DateTimeFormat('hr-HR').format(newDate);
 };
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  if (authStore.auth.role !== 'ADMIN') await router.push('/');
+})
 </script>
 
 <style scoped>

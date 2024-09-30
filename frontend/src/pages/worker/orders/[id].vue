@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useOrderStore } from '@/stores/order';
 import BackButton from "@/components/BackButton.vue";
+import {useAuthStore} from "@/stores/auth";
+import router from "@/router";
 
 const route = useRoute();
 const orderId = route.params.id;
@@ -34,6 +36,12 @@ const formatDateAndTime = (date) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
   return new Date(date).toLocaleDateString('hr-HR', options);
 };
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  if (authStore.auth.role !== 'ADMIN' && authStore.auth.role !== 'WORKER') await router.push('/');
+})
 </script>
 
 <template>

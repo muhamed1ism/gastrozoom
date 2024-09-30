@@ -2,14 +2,18 @@
 import BackButton from "@/components/BackButton.vue";
 import {useAddressStore} from "@/stores/address";
 import {useRoute} from "vue-router";
+import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const route = useRoute();
 const address = ref({});
 const addressId = route.params.id;
 
 const addressStore = useAddressStore();
+const authStore = useAuthStore();
 
 onMounted(async () => {
+  if (!authStore.auth.isAuthenticated) await router.push('/login');
   await addressStore.fetchAddressById(addressId);
   await addressStore.fetchAddresses();
   address.value = addressStore.address;

@@ -1,7 +1,7 @@
 <script setup>
 
 import BackButton from "@/components/BackButton.vue";
-import OrderCard from "@/components/OrderCard.vue";
+import OrderUserCard from "@/components/OrderUserCard.vue";
 import {useOrderStore} from "@/stores/order";
 
 const orderStore = useOrderStore();
@@ -52,7 +52,7 @@ const rejectedOrders = computed(() => {
           Na čekanju
         </h1>
         <v-col v-for="order in createdOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Kreirana" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="Kreirana" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -63,7 +63,7 @@ const rejectedOrders = computed(() => {
           U pripremi
         </h1>
         <v-col v-for="order in acceptedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Prihvaćena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="Prihvaćena" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -74,7 +74,7 @@ const rejectedOrders = computed(() => {
           Na putu
         </h1>
         <v-col v-for="order in inDeliveryOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="U dostavi" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="U dostavi" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -85,7 +85,7 @@ const rejectedOrders = computed(() => {
           Dostavljene
         </h1>
         <v-col v-for="order in deliveredOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Dostavljena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="Dostavljena" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -96,7 +96,7 @@ const rejectedOrders = computed(() => {
           Odbijene
         </h1>
         <v-col v-for="order in rejectedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Odbijena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="Odbijena" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
       </v-col>
     </v-row>

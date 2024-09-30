@@ -3,6 +3,9 @@
 import BackButton from "@/components/BackButton.vue";
 import OrderCard from "@/components/OrderCard.vue";
 import {useOrderStore} from "@/stores/order";
+import {useAuthStore} from "@/stores/auth";
+import {onMounted} from "vue";
+import router from "@/router";
 
 const orderStore = useOrderStore();
 
@@ -33,6 +36,12 @@ const deliveredOrders = computed(() => {
 const rejectedOrders = computed(() => {
   return orders.value.filter(order => order.status === 'REJECTED');
 });
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  if (authStore.auth.role !== 'ADMIN' && authStore.auth.role !== 'WORKER') await router.push('/');
+})
 </script>
 
 <template>

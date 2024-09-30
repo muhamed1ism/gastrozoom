@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const router = express.Router();
+const authenticateToken = require('../middleware/authenticateToken');
+const authorizeAdmin = require('../middleware/authorizeAdmin');
 
 dotenv.config();
 
@@ -83,7 +85,7 @@ router.post('/login', async function(req, res) {
 });
 
 // get user data
-router.get('/me', async function(req, res) {
+router.get('/me', authenticateToken, async function(req, res) {
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -108,7 +110,7 @@ router.get('/me', async function(req, res) {
 });
 
 // get user data by id
-router.get('/:id', async function(req, res) {
+router.get('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
   const { id } = req.params;
 
   try {
@@ -132,7 +134,7 @@ router.get('/:id', async function(req, res) {
 });
 
 // update user data
-router.put('/:id', async function(req, res) {
+router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
   const { id } = req.params;
   const { name, phoneNumber, email, role } = req.body;
 
@@ -160,7 +162,7 @@ router.put('/:id', async function(req, res) {
 });
 
 // logout user
-router.delete('/logout', async function(req, res) {
+router.delete('/logout', authenticateToken, async function(req, res) {
   const token = req.headers.authorization?.split(' ')[1];
   if (token) {
     await prisma.revokedToken.create({

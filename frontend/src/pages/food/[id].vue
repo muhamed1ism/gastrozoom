@@ -6,6 +6,7 @@ import {useRoute} from "vue-router";
 import {useBasketStore} from "@/stores/basket";
 import {ref} from "vue";
 import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const route = useRoute();
 const foodId = Number(route.params.id);
@@ -16,6 +17,7 @@ const inputWidth = ref(42);
 
 const foodStore = useFoodStore();
 const basketStore = useBasketStore();
+const authStore = useAuthStore();
 
 onMounted(
   async () => {
@@ -53,12 +55,20 @@ const decreaseQuantity = () => {
   }
 };
 
-const addToBasket = () => {
+const addToBasket = async () => {
+  if (!authStore.auth.isAuthenticated) {
+    await router.push('/login');
+    return;
+  }
   basketStore.addFoodToBasket(foodId, quantity.value);
   basketStore.checkIsFoodInBasket(foodId);
 };
 
 const orderNow = async () => {
+  if (!authStore.auth.isAuthenticated) {
+    await router.push('/login');
+    return;
+  }
   if (!basketStore.basket.isFoodInBasket) {
     basketStore.addFoodToBasket(foodId, quantity.value);
   }

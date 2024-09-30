@@ -1,5 +1,9 @@
 <script setup>
 import BackButton from "@/components/BackButton.vue";
+import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
+
+const authStore = useAuthStore();
 
 const form = ref({
   name: "",
@@ -18,6 +22,10 @@ const foodCategories = [
   "SALATA",
   "JUHA",
 ];
+
+onMounted(async () => {
+  if (authStore.auth.role !== 'ADMIN') await router.push('/');
+})
 
 </script>
 

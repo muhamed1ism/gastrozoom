@@ -5,6 +5,7 @@ import OrderFoodCard from "@/components/OrderFoodCard.vue";
 import {useBasketStore} from "@/stores/basket";
 import {useAddressStore} from "@/stores/address";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/stores/auth";
 
 const router = useRouter();
 
@@ -13,6 +14,7 @@ const foods = ref([]);
 
 const basketStore = useBasketStore();
 const addressStore = useAddressStore();
+const authStore = useAuthStore();
 
 const priceWithoutDelivery = computed(() => {
   return foods.value.reduce((total, food) => {
@@ -40,6 +42,7 @@ const createOrder = async () => {
 };
 
 onMounted(async () => {
+  if (!authStore.auth.isAuthenticated) await router.push('/login');
   await basketStore.fetchBasketFoods();
   foods.value = basketStore.basket.foods;
   console.log(foods.value);

@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton.vue";
 import {useMessageStore} from "@/stores/message";
 import {ref} from "vue";
 import router from "@/router";
+import {useAuthStore} from "@/stores/auth";
 
 const form = ref({
   title: "",
@@ -14,6 +15,7 @@ const alertMessage = ref('');
 const alertVisible = ref(false);
 
 const messageStore = useMessageStore();
+const authStore = useAuthStore();
 
 const submit = async () => {
   try {
@@ -27,6 +29,10 @@ const submit = async () => {
     }
   }
 };
+
+onMounted(async () => {
+  if (authStore.auth.role !== 'ADMIN') await router.push('/');
+})
 
 </script>
 
