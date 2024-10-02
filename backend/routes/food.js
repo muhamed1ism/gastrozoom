@@ -17,7 +17,7 @@ router.post('/create', authenticateToken, authorizeAdmin, async function(req, re
       data: {
         name,
         description: description || '',
-        price,
+        price: Number(price),
         category: category || 'GLAVNO_JELO',
         imageUrl: imageUrl || ''
       },
@@ -25,6 +25,7 @@ router.post('/create', authenticateToken, authorizeAdmin, async function(req, re
 
     res.status(201).json(newFood);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Kreiranje hrane nije uspjelo' });
   }
 });
@@ -36,6 +37,7 @@ router.get('/all', async function(req, res) {
 
     res.status(200).json(foods);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Doahvat hrane nije uspio' });
   }
 });
@@ -53,6 +55,7 @@ router.get('/:id', async function(req, res) {
 
     res.status(200).json(food);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Dohvat hrane nije uspio' });
   }
 });
@@ -74,13 +77,14 @@ router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
       data: {
         name,
         description,
-        price,
+        price: Number(price),
         category,
       },
     });
 
     res.status(200).json(updatedFood);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Ažuriranje hrane nije uspjelo' });
   }
 });
@@ -98,6 +102,7 @@ router.delete('/:id', authenticateToken, authorizeAdmin, async function(req, res
 
     res.status(204).send();
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Brisanje hrane nije uspjelo' });
   }
 });

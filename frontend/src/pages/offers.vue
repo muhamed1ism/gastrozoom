@@ -8,17 +8,6 @@ const search = ref("");
 const foods = ref([])
 
 const foodStore = useFoodStore();
-const filters = [
-  {
-    title: "Cijena",
-  },
-  {
-    title: "Kategorija",
-  },
-  {
-    title: "Ocjena",
-  },
-];
 
 onMounted(
   async () => {
@@ -40,6 +29,34 @@ const filteredFoods = computed(() => {
     return food.name.toLowerCase().includes(search.value.toLowerCase());
   });
 });
+
+const sortByPriceAscending = () => {
+  foods.value.sort((a, b) => a.price - b.price);
+};
+
+const sortByPriceDescending = () => {
+  foods.value.sort((a, b) => b.price - a.price);
+};
+
+const sortByNameAscending = () => {
+  foods.value.sort((a, b) => a.name.localeCompare(b.name));
+};
+
+const sortByNameDescending = () => {
+  foods.value.sort((a, b) => b.name.localeCompare(a.name));
+};
+
+const sortByCategory = () => {
+  foods.value.sort((a, b) => a.category.localeCompare(b.category));
+};
+
+const filters = [
+  { icon: "mdi-chevron-up", title: "Cijena rastuće", action: sortByPriceAscending },
+  { icon: "mdi-chevron-down", title: "Cijena opadajuće", action: sortByPriceDescending },
+  { icon: "mdi-chevron-up", title: "Naziv rastuće", action: sortByNameAscending },
+  { icon: "mdi-chevron-down", title: "Naziv opadajuće", action: sortByNameDescending },
+  { icon: "mdi-shape", title: "Kategorija", action: sortByCategory },
+];
 </script>
 
 <template>
@@ -65,17 +82,18 @@ const filteredFoods = computed(() => {
           rounded
           hide-details
         />
-        <v-menu>
+        <v-menu location="bottom" offset="8">
           <template v-slot:activator="{ props }">
-            <v-btn icon="mdi-filter-variant" class="ml-6 custom-radius" color="primary" variant="tonal"/>
+            <v-btn icon="mdi-filter-variant" class="ml-6 custom-radius" color="primary" variant="tonal" v-bind="props"/>
           </template>
-          <v-list>
+          <v-list rounded="xl" elevation="0" bg-color="primary" variant="flat">
             <v-list-item
+              class="bg-primary"
               v-for="(item, index) in filters"
               :key="index"
-              :value="index"
+              @click="item.action"
             >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title><v-icon class="mr-1" :icon="item.icon"/> {{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>

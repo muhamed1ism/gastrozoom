@@ -85,6 +85,7 @@ router.get('/all', authenticateToken, authorizeAdmin, async function (req, res) 
 
     res.status(200).json(orders);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Dohvat narudžbi nije uspio' });
   }
 });
@@ -101,6 +102,7 @@ router.get('/user-all', authenticateToken, async function (req, res) {
 
     res.status(200).json(orders);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Dohvat narudžbi nije uspio' });
   }
 });
@@ -118,6 +120,7 @@ router.get('/:id', async function (req, res) {
 
     res.status(200).json(order);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Dohvat narudžbe nije uspio' });
   }
 });

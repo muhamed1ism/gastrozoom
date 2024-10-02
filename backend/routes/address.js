@@ -42,6 +42,7 @@ router.post('/create', authenticateToken, async function (req, res) {
 
     res.status(201).json(newAddress);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u kreiranju adrese'});
   }
 });
@@ -58,6 +59,7 @@ router.get('/all', authenticateToken, async function (req, res) {
 
     res.status(200).json(addresses);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u dohvatanju adresa'});
   }
 });
@@ -75,6 +77,7 @@ router.get('/primary', authenticateToken, async function (req, res) {
 
     res.status(200).json(address);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u dohvatanju adrese'});
   }
 });
@@ -94,6 +97,7 @@ router.get('/:id', authenticateToken, async function (req, res) {
 
     res.status(200).json(address);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u dohvatanju adrese'});
   }
 });
@@ -125,6 +129,7 @@ router.put('/:id', authenticateToken, async function (req, res) {
 
     res.status(200).json(updatedAddress);
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u ažuriranju adrese'});
   }
 });
@@ -144,6 +149,7 @@ router.delete('/:id', authenticateToken, async function (req, res) {
 
     res.status(200).json({message: 'Adresa je uspešno obrisana'});
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({error: 'Greška u brisanju adrese'});
   }
 });

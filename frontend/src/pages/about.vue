@@ -32,43 +32,11 @@ import BackButton from "@/components/BackButton.vue";
         </v-col>
       </v-row>
     </v-card>
-    <v-row justify="space-evenly" class="py-16">
-      <v-col cols="12" sm="10" md="4" lg="3">
-        <v-card class="custom-shadow pb-4" rounded="xl">
-          <v-img src="" class="bg-grey-lighten-2 ma-4 custom-radius aspect-ratio">
-            <template #placeholder>
-              <v-icon class="fill-height w-100" size="4rem">mdi-image</v-icon>
-            </template>
-          </v-img>
-          <v-card-title class="text-h6">Ime i prezime</v-card-title>
-          <v-card-text class="text-subtitle-1">Opis</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="10" md="4" lg="3">
-        <v-card class="custom-shadow pb-4" rounded="xl">
-          <v-img src="" class="bg-grey-lighten-2 ma-4 custom-radius aspect-ratio">
-            <template #placeholder>
-              <v-icon class="fill-height w-100" size="4rem">mdi-image</v-icon>
-            </template>
-          </v-img>
-          <v-card-title class="text-h6">Ime i prezime</v-card-title>
-          <v-card-text class="text-subtitle-1">Opis</v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
 <style scoped>
 .custom-radius {
   border-radius: 16px;
-}
-
-.custom-shadow {
-  box-shadow: 0 0 32px 8px #ECEFF1;
-}
-
-.aspect-ratio {
-  aspect-ratio: 4/3;
 }
 </style>

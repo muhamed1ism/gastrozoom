@@ -39,7 +39,7 @@ model Address {
 model Food {
   id          Int          @id @default(autoincrement())
   name        String
-  description String? // Optional field for additional details like ingredients
+  description String?
   price       Float
   imageUrl    String
   category    FoodCategory @default(GLAVNO_JELO)

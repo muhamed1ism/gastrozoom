@@ -47,6 +47,7 @@ router.post('/register', async function(req, res) {
 
     res.status(201).json({ token });
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Registracija nije uspjela'})
   }
 });
@@ -80,6 +81,7 @@ router.post('/login', async function(req, res) {
 
     res.status(200).json({ token });
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Prijava nije uspjela' });
   }
 });
@@ -105,6 +107,7 @@ router.get('/me', authenticateToken, async function(req, res) {
 
     res.status(200).json({ user });
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Nemoguće dohvatiti podatke korisnika' });
   }
 });
@@ -129,6 +132,7 @@ router.get('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
 
     res.status(200).json({ user });
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Nemoguće dohvatiti podatke korisnika' });
   }
 });
@@ -157,6 +161,7 @@ router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
 
     res.status(200).json({ user: updatedUser });
   } catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ error: 'Ažuriranje podataka korisnika nije uspjelo' });
   }
 });

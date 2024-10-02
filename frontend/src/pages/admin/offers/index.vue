@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="mt-6 mb-16">
-    <v-row class="d-flex align-center py-6" justify="start">
-      <v-col cols="12" sm="7" lg="6" class="d-flex">
+    <v-row class="d-flex align-center py-6" justify="center">
+      <v-col cols="12" sm="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
           <h1 class="text-h5 text-md-h4 font-weight-medium">Ponude</h1>
@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
     <v-row class="d-flex align-center my-4 mx-2 justify-space-between">
-      <v-col class="d-flex justify-end align-center" cols="12" sm="7" lg="6" offset-sm="5" offset-lg="6">
+      <v-col class="d-flex justify-end align-center" cols="12" sm="8" lg="6" offset-sm="2" offset-lg="3">
         <v-text-field
           v-model="search"
           class="custom-text-field elevation-0 bg-secondary rounded-xl pl-8 pr-4 pb-2"
@@ -23,7 +23,7 @@
         />
         <v-btn icon="mdi-plus" class="ml-4 custom-radius" variant="flat" color="primary" to="/admin/offers/add"/>
       </v-col>
-      <v-col>
+      <v-col class="12" sm="10" lg="8" offset-sm="1" offset-lg="2">
         <v-data-table :headers="headers" :items="foods" :search="search" multi-sort
                       items-per-page-text="Broj stavki po stranici" :items-per-page="10">
 
@@ -36,6 +36,9 @@
           <template v-slot:item.createdAt="{ item }">
             <div class="truncate-date-column">{{ formatDate(item.createdAt) }}</div>
           </template>
+          <template v-slot:item.price="{ item }">
+            <div class="truncate-name-column">{{ item.price }} KM</div>
+          </template>
 
           <template v-slot:no-data>
             <p>Nema ponuda</p>
@@ -44,7 +47,7 @@
             <v-btn icon="mdi-pencil" variant="outlined" color="primary" size="small"
                    :to="`/admin/offers/${item.id}/edit`" class="ma-1 custom-radius" />
             <v-btn icon="mdi-delete" variant="flat" color="primary" size="small"
-                   @click="" class="ma-1 custom-radius" />
+                   @click="async () => await deleteFood(item.id)" class="ma-1 custom-radius" />
           </template>
         </v-data-table>
       </v-col>
@@ -59,24 +62,15 @@
 import BackButton from "@/components/BackButton.vue";
 import router from "@/router";
 import {useAuthStore} from "@/stores/auth";
+import {useFoodStore} from "@/stores/food";
 
 const foods = ref([]);
 const search = ref("");
-
-foods.value = [
-  { id: 1, name: "Pizza", price: 20, updatedAt: "2022-01-01", createdAt: "2022-01-01" },
-  { id: 2, name: "Pasta", price: 15, updatedAt: "2022-01-01", createdAt: "2022-01-01" },
-  { id: 3, name: "Salad", price: 10, updatedAt: "2022-01-01", createdAt: "2022-01-01" },
-  { id: 4, name: "Burger", price: 25, updatedAt: "2022-01-01", createdAt: "2022-01-01" },
-  { id: 5, name: "Sandwich", price: 5, updatedAt: "2022-01-01", createdAt: "2022-01-01" },
-];
 
 const headers = [
   { title: "ID", text: "ID", value: "id", sortable: true },
   { title: "Naziv", text: "Naziv", value: "name", sortable: true },
   { title: "Cijena", text: "Cijena", value: "price", sortable: true },
-  { title: "Ažurirano", text: "Ažurirano", value: "updatedAt", sortable: true },
-  { title: "Kreirano", text: "Kreirano", value: "createdAt", sortable: true },
   {
     title: "Akcije",
     text: "Akcije",
@@ -86,15 +80,23 @@ const headers = [
   },
 ];
 
-const formatDate = (date) => {
-  const newDate = new Date(date);
-  return new Intl.DateTimeFormat('hr-HR').format(newDate);
-};
-
 const authStore = useAuthStore();
+const foodStore = useFoodStore();
+
+const deleteFood = async (foodId) => {
+  await foodStore.deleteFood(foodId);
+  await foodStore.fetchFoods();
+  foods.value = foodStore.foods;
+};
 
 onMounted(async () => {
   if (authStore.auth.role !== 'ADMIN') await router.push('/');
+  try {
+    await foodStore.fetchFoods();
+    foods.value = foodStore.foods;
+  } catch (e) {
+    console.error(e);
+  }
 })
 </script>
 

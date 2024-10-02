@@ -39,7 +39,7 @@ export const useFoodStore = defineStore('food', {
       try {
         const authStore = useAuthStore();
         const token = authStore.auth.token;
-        const res = await axios.post(apiUrl, foodData, {
+        const res = await axios.post(`${apiUrl}/create`, foodData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,17 +57,11 @@ export const useFoodStore = defineStore('food', {
       try {
         const authStore = useAuthStore();
         const token = authStore.auth.token;
-        const res = await axios.put(`${apiUrl}/${id}`, foodData, {
+        await axios.put(`${apiUrl}/${id}`, foodData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (res.status === 200) {
-          const index = this.foods.findIndex(food => food.id === id);
-          if (index !== -1) {
-            this.foods[index] = res.data;
-          }
-        }
       } catch (error) {
         console.log("Failed to update food: ", error);
         throw error;
