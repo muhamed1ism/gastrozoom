@@ -29,7 +29,7 @@ const deleteAddress = async (addressId) => {
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Adrese</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Address</h1>
         </div>
       </v-col>
     </v-row>
@@ -40,11 +40,11 @@ const deleteAddress = async (addressId) => {
         <v-btn prepend-icon="mdi-plus" color="primary" variant="flat"
                class="custom-radius mx-2 mx-sm-4" size="large" to="/address/add"
         >
-          Dodaj
+          Add
         </v-btn>
       </v-col>
       <v-col v-if="addresses.length === 0" cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
-        <h4 class="text-h4 text-center text-primary">Nema adresa</h4>
+        <h4 class="text-h4 text-center text-primary">No address</h4>
       </v-col>
       <v-col v-for="address in addresses" cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
         <RouterLink :to="`/address/${address.id}`" class="text-decoration-none text-black">
@@ -54,7 +54,7 @@ const deleteAddress = async (addressId) => {
             </template>
               <v-card-title class="text-subtitle-1 text-start text-black w-33 w-sm-50 w-md-66 mr-auto">
                 <h4 class="text-subtitle-1 text-sm-h6 text-md-h5  text-truncate">
-                  Adresa: {{ address.address }} {{ address.addressNumber }}, Kat: {{ address.floorNumber }}
+                  Address: {{ address.address }} {{ address.addressNumber }}, Floor: {{ address.floorNumber }}
                 </h4>
               </v-card-title>
               <v-card-actions class="pa-3">

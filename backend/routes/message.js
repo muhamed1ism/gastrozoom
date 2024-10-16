@@ -1,8 +1,9 @@
-const express = require('express');
-const prisma = require('../config/prisma');
+import express from "express";
+import prisma from "../config/prisma.js";
+import authenticateToken from "../middleware/authenticateToken.js";
+import authorizeAdmin from "../middleware/authorizeAdmin.js";
+
 const router = express.Router();
-const authenticateToken = require("../middleware/authenticateToken");
-const authorizeAdmin = require("../middleware/authorizeAdmin");
 
 // Get all messages
 router.get('/all', authenticateToken, async (req, res) => {
@@ -14,7 +15,7 @@ router.get('/all', authenticateToken, async (req, res) => {
     res.status(200).json(messages);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Dohvat poruka nije uspio' });
+    res.status(500).json({ error: 'Error fetching messages' });
   }
 });
 
@@ -32,7 +33,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     res.status(200).json(message);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Dohvat poruke nije uspio' });
+    res.status(500).json({ error: 'Error fetching message' });
   }
 });
 
@@ -41,7 +42,7 @@ router.post('/create', authenticateToken, authorizeAdmin, async (req, res) => {
   const { title, text } = req.body;
 
   if (!title || !text) {
-    return res.status(400).json({ error: 'Poruka je obavezna' });
+    return res.status(400).json({ error: 'Message title and text are required' });
   }
 
   try {
@@ -63,7 +64,7 @@ router.post('/create', authenticateToken, authorizeAdmin, async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Kreiranje poruke nije uspjelo' });
+    res.status(500).json({ error: 'Creating message failed' });
   }
 });
 
@@ -78,11 +79,11 @@ router.delete('/:id', authenticateToken, async (req, res) => {
         id: Number(id)
       },
     });
-    res.status(200).json({ message: 'Poruka je uspešno obrisana' });
+    res.status(200).json({ message: 'Message deleted' });
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Brisanje poruke nije uspjelo' });
+    res.status(500).json({ error: 'Error deleting message' });
   }
 });
 
-module.exports = router;
+export default router;

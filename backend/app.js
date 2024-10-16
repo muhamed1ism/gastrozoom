@@ -1,13 +1,14 @@
-const express = require('express');
-const prisma = require('./config/prisma');
-const logger = require('morgan');
-const cors = require('cors');
+import express from 'express';
+import prisma from './config/prisma.js';
+import logger from 'morgan';
+import cors from 'cors';
 
-const authRouter = require('./routes/auth');
-const foodRouter = require('./routes/food');
-const addressRouter = require('./routes/address');
-const orderRouter = require('./routes/order');
-const messageRouter = require('./routes/message');
+import authRouter from './routes/auth.js';
+import foodRouter from './routes/food.js';
+import addressRouter from './routes/address.js';
+import orderRouter from './routes/order.js';
+import messageRouter from './routes/message.js';
+import userRouter from './routes/user.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/food', foodRouter);
 app.use('/address', addressRouter);
 app.use('/order', orderRouter);
 app.use('/message', messageRouter);
+app.use('/user', userRouter);
 
 const PORT = 4000;
 
@@ -27,13 +29,11 @@ const start = async () => {
   try {
     await prisma.$connect();
     app.listen(PORT, () => {
-      console.log(`Server radi na http://localhost:${PORT}`);
+      console.log(`The server is running at http://localhost:${PORT}`);
     })
   } catch (error) {
-    console.error('Greška u pokretanju servera:', error);
+    console.error('Error starting the server:', error);
   }
 }
 
 start();
-
-module.exports = app;

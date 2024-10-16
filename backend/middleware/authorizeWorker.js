@@ -1,8 +1,8 @@
 const authorizeWorker = (req, res, next) => {
   if (req.user.role !== 'WORKER' && req.user.role !== 'ADMIN') {
-    return res.status(403).json({ error: 'Pristup nije dozvoljen' });
+    return res.status(403).json({ error: 'Unauthorized' });
   }
   next();
 };
 
-module.exports = authorizeWorker;
+export default authorizeWorker;

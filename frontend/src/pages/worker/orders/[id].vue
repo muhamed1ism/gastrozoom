@@ -23,11 +23,11 @@ const updateOrderStatus = async (newStatus) => {
 };
 
 const statusTranslations = {
-  CREATED: 'Kreirano',
-  ACCEPTED: 'Prihvaćeno',
-  REJECTED: 'Odbijeno',
-  IN_DELIVERY: 'U dostavi',
-  DELIVERED: 'Dostavljeno',
+  CREATED: 'Created',
+  ACCEPTED: 'Accepted',
+  REJECTED: 'Rejected',
+  IN_DELIVERY: 'In delivery',
+  DELIVERED: 'Delivered',
 };
 
 const translatedStatus = computed(() => statusTranslations[order.value.status] || order.value.status);
@@ -50,7 +50,7 @@ onMounted(async () => {
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton/>
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Detalji narudžbe</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Order details</h1>
         </div>
       </v-col>
     </v-row>
@@ -58,7 +58,7 @@ onMounted(async () => {
       <v-col cols="12" sm="10" md="8" lg="6">
         <v-card class="custom-shadow pa-4" rounded="xl">
           <v-card-title class="text-h6 text-sm-h5 text-start text-black">
-            Narudžba #{{ order.id }}
+            Order #{{ order.id }}
           </v-card-title>
           <v-card-subtitle class="text-subtitle-2 text-sm-subtitle-1 text-black">
             {{ formatDateAndTime(order.createdAt) }}
@@ -67,16 +67,16 @@ onMounted(async () => {
             <span class="font-weight-medium">Status:</span> {{ translatedStatus }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
-            <span class="font-weight-medium">Ukupna cijena:</span> {{ order.totalPrice }} KM
+            <span class="font-weight-medium">Total price:</span> {{ order.totalPrice }} KM
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
-            <span class="font-weight-medium">Adresa:</span> {{ order.address }} {{ order.addressNumber }},
-            <span class="font-weight-medium">Kat:</span> {{ order.floorNumber }}
+            <span class="font-weight-medium">Address:</span> {{ order.address }} {{ order.addressNumber }},
+            <span class="font-weight-medium">Floor:</span> {{ order.floorNumber }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 mx-4 text-grey-darken-3">
             <ul v-for="item in order.orderItems">
               <li :key="item.id">
-                {{ item.foodName }} - {{ item.quantity }} x {{ item.foodPrice }} KM
+                $ {{ item.foodName }} - {{ item.quantity }} x {{ item.foodPrice }}
               </li>
             </ul>
           </v-card-text>
@@ -85,23 +85,23 @@ onMounted(async () => {
               <v-btn @click="() => updateOrderStatus('ACCEPTED')" color="green-lighten-1" variant="flat"
                      class="w-50 mx-2 custom-radius" prepend-icon="mdi-check-circle"
               >
-                Prihvati narudžbu
+                Approve order
               </v-btn>
               <v-btn @click="() => updateOrderStatus('REJECTED')" color="red-lighten-1" variant="flat"
                      class="w-50 mx-2 custom-radius" prepend-icon="mdi-close-circle"
               >
-                Odbij narudžbu
+                Reject order
               </v-btn>
             </div>
             <v-btn v-if="order.status === 'ACCEPTED'" @click="() => updateOrderStatus('IN_DELIVERY')"
                    color="primary" variant="flat" class="w-100 custom-radius"
             >
-              Označi kao u dostavi
+              Mark as in delivery
             </v-btn>
             <v-btn v-if="order.status === 'IN_DELIVERY'" @click="() => updateOrderStatus('DELIVERED')"
                    color="primary" variant="flat" class="w-100 custom-radius"
             >
-              Označi kao dostavljeno
+              Mark as delivered
             </v-btn>
           </v-card-actions>
         </v-card>

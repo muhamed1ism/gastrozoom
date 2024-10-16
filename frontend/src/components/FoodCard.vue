@@ -34,7 +34,7 @@ defineProps({
         <v-card-title class="text-h6 text-sm-h5 w-100 w-sm-auto text-start text-black">{{ title }}</v-card-title>
 
         <v-card-text class="w-100 w-sm-auto text-end text-h5 text-sm-h4 font-weight-medium text-end mr-sm-4 mt-3 text-primary">
-          {{ price }} KM
+          $ {{ price.toFixed(2) }}
         </v-card-text>
       </div>
 

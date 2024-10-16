@@ -17,17 +17,18 @@ const form = ref({
   description: "",
   category: "",
   imageUrl: "",
+  image: "",
   price: null,
 });
 
 const foodCategories = [
-  "PREDJELO",
-  "GLAVNO JELO",
-  "DESERT",
-  "NAPITAK",
-  "PRILOG",
-  "SALATA",
-  "JUHA",
+  "APPETIZER",
+  "MAIN DISH",
+  "DESSERT",
+  "DRINK",
+  "SIDE DISH",
+  "SALAD",
+  "SOUP"
 ];
 
 onMounted(async () => {
@@ -37,10 +38,21 @@ onMounted(async () => {
 })
 
 const submit = async () => {
-  if (form.value.category === "GLAVNO JELO") {
-    form.value.category = "GLAVNO_JELO";
+  if (form.value.category === "MAIN DISH") {
+    form.value.category = "MAIN_DISH";
   }
-  await foodStore.updateFood(foodId, form.value);
+  if (form.value.category === "SIDE DISH") {
+    form.value.category = "SIDE_DISH";
+  }
+  const formData = new FormData();
+  formData.append('name', form.value.name);
+  formData.append('description', form.value.description);
+  formData.append('price', form.value.price);
+  formData.append('category', form.value.category);
+  if (form.value.image) {
+    formData.append('image', form.value.image);
+  }
+  await foodStore.updateFood(foodId, formData);
   await router.push('/admin/offers');
   window.location.reload();
 }
@@ -50,30 +62,35 @@ const submit = async () => {
   <v-container fluid class="fill-height">
     <v-row class="pb-8">
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3" class="d-flex">
-        <BackButton/>
+        <BackButton />
+        <div class="d-flex align-center pl-6">
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Edit offer</h1>
+        </div>
       </v-col>
       <v-col cols="10" sm="8" md="6" lg="4" offset="1" offset-sm="2" offset-md="3" offset-lg="4">
-        <v-icon size="8rem" class="text-center text-primary w-100 mb-4">mdi-food</v-icon>
-        <h4 class="text-h4 text-center font-weight-medium pb-12">Uredi ponudu</h4>
+
+        <v-img v-if="form.imageUrl !== ''" :src="form.imageUrl" height="200px" class="ma-4"/>
+        <v-icon v-else size="8rem" class="text-center text-primary w-100 mb-8">mdi-food</v-icon>
         <v-form @submit.prevent="submit">
-          <v-text-field density="compact" placeholder="Naziv ponude" rounded
+          <v-text-field density="compact" placeholder="Name" rounded
                         variant="outlined" v-model="form.name" class="mb-1" append-inner-icon="."/>
 
-          <v-text-field density="compact" placeholder="Opis ponude" rounded
+          <v-text-field density="compact" placeholder="Description" rounded
                         variant="outlined" v-model="form.description" class="mb-1" append-inner-icon="."/>
 
-          <v-select :items="foodCategories" variant="outlined" label="Vrsta ponude" v-model="form.category" class="mb-1"
+          <v-select :items="foodCategories" variant="outlined" label="Category" v-model="form.category" class="mb-1"
                     rounded/>
 
-          <!--          <v-file-input density="compact" label="Odaberite sliku ponude" variant="outlined" rounded
-                                  v-model="form.image" class="mb-1" />-->
+          <v-file-input density="compact" label="Select image" variant="outlined" rounded
+                        v-model="form.image" class="mb-1">
+          </v-file-input>
 
-          <v-text-field density="compact" placeholder="Unesite cijenu ponude" variant="outlined" suffix="KM" rounded
-                        type="number" step="0.05" v-model="form.price" class="mb-1"/>
+          <v-text-field density="compact" placeholder="Enter price" variant="outlined" prefix="$" rounded
+                        type="number" step="0.01" v-model="form.price" class="mb-1"/>
 
-          <v-btn type="submit" prepend-icon="mdi-plus" block variant="flat" color="primary" size="large"
+          <v-btn type="submit" prepend-icon="mdi-content-save" block variant="flat" color="primary" size="large"
                  class="mb-8 mt-2" rounded>
-            Spremi promjene
+            Save changes
           </v-btn>
         </v-form>
       </v-col>

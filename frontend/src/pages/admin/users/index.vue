@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Offers</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Users</h1>
         </div>
       </v-col>
     </v-row>
@@ -21,32 +21,37 @@
           rounded
           hide-details
         />
-        <v-btn icon="mdi-plus" class="ml-4 custom-radius" variant="flat" color="primary" to="/admin/offers/add"/>
       </v-col>
       <v-col class="12" sm="10" lg="8" offset-sm="1" offset-lg="2">
-        <v-data-table :headers="headers" :items="foods" :search="search" multi-sort :items-per-page="10">
+        <v-data-table :headers="headers" :items="users.users" :search="search" multi-sort :items-per-page="10">
 
           <template v-slot:item.name="{ item }">
             <div class="truncate-name-column">{{ item.name }}</div>
           </template>
-          <template v-slot:item.updatedAt="{ item }">
-            <div class="truncate-date-column">{{ formatDate(item.updatedAt) }}</div>
-          </template>
-          <template v-slot:item.createdAt="{ item }">
-            <div class="truncate-date-column">{{ formatDate(item.createdAt) }}</div>
-          </template>
-          <template v-slot:item.price="{ item }">
-            <div class="truncate-name-column">$ {{ item.price.toFixed(2) }}</div>
-          </template>
 
           <template v-slot:no-data>
-            <p>No offers</p>
+            <p>No users</p>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn icon="mdi-pencil" variant="outlined" color="primary" size="small"
-                   :to="`/admin/offers/${item.id}/edit`" class="ma-1 custom-radius" />
-            <v-btn icon="mdi-delete" variant="flat" color="primary" size="small"
-                   @click="async () => await deleteFood(item.id)" class="ma-1 custom-radius" />
+            <v-menu location="bottom" offset="8">
+              <template v-slot:activator="{ props }">
+                <v-btn append-icon="mdi-dots-vertical" v-bind="props" value="Role" class="custom-radius" color="primary"
+                       variant="tonal"
+                >
+                  Role
+                </v-btn>
+              </template>
+              <v-list rounded="xl" elevation="0" bg-color="primary" variant="flat">
+                <v-list-item
+                  class="bg-primary"
+                  v-for="(item, index) in roleMenu"
+                  :key="index"
+                  @click="item.action"
+                >
+                  <v-list-item-title><v-icon class="mr-1" :icon="item.icon"/> {{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </v-data-table>
       </v-col>
@@ -61,15 +66,16 @@
 import BackButton from "@/components/BackButton.vue";
 import router from "@/router";
 import {useAuthStore} from "@/stores/auth";
-import {useFoodStore} from "@/stores/food";
+import {useUserStore} from "@/stores/user";
 
-const foods = ref([]);
+const users = ref([]);
 const search = ref("");
 
 const headers = [
   { title: "ID", text: "ID", value: "id", sortable: true },
   { title: "Name", text: "Name", value: "name", sortable: true },
-  { title: "Price", text: "Price", value: "price", sortable: true },
+  { title: "Email", text: "Email", value: "email", sortable: true },
+  { title: "Role", text: "Role", value: "role", sortable: true },
   {
     title: "Actions",
     text: "Actions",
@@ -79,21 +85,33 @@ const headers = [
   },
 ];
 
-const authStore = useAuthStore();
-const foodStore = useFoodStore();
+const setRoleUser = async (id) => {
+  await userStore.updateUserRole(id, "USER");
+}
 
-const deleteFood = async (foodId) => {
-  await foodStore.deleteFood(foodId);
-  await foodStore.fetchFoods();
-  foods.value = foodStore.foods;
-};
+const setRoleAdmin = async (id) => {
+  await userStore.updateUserRole(id, "ADMIN");
+}
+
+const setRoleWorker = async (id) => {
+  await userStore.updateUserRole(id, "WORKER");
+}
+
+const roleMenu = [
+  { title: "User", icon: "mdi-account", action: setRoleUser },
+  { title: "Admin", icon: "mdi-account-cog", action: setRoleAdmin },
+  { title: "Worker", icon: "mdi-account-hard-hat", action: setRoleWorker },
+];
+
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
 onMounted(async () => {
   if (authStore.auth.role !== 'ADMIN') await router.push('/');
   try {
-    await foodStore.fetchFoods();
-    foods.value = foodStore.foods;
-    console.log(foods.value);
+    await userStore.fetchUsers();
+    users.value = userStore.users;
+    console.log(users.value);
   } catch (e) {
     console.error(e);
   }
@@ -111,13 +129,6 @@ onMounted(async () => {
 
 .truncate-name-column {
   max-width: 300px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.truncate-date-column {
-  width: 81px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

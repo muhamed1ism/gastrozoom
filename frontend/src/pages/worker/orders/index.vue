@@ -50,7 +50,7 @@ onMounted(async () => {
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton/>
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Moje narudžbe</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Orders</h1>
         </div>
       </v-col>
     </v-row>
@@ -58,10 +58,10 @@ onMounted(async () => {
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
         <h1 class="text-h5 text-md-h4 mb-4 font-weight-medium">
           <v-icon icon="mdi-timer-sand"/>
-          Na čekanju
+          Created
         </h1>
         <v-col v-for="order in createdOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Kreirana" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -69,10 +69,10 @@ onMounted(async () => {
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
         <h1 class="text-h5 text-md-h4 mb-4 font-weight-medium">
           <v-icon icon="mdi-progress-clock"/>
-          U pripremi
+          Accepted
         </h1>
         <v-col v-for="order in acceptedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Prihvaćena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -80,10 +80,10 @@ onMounted(async () => {
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
         <h1 class="text-h5 text-md-h4 mb-4 font-weight-medium">
           <v-icon icon="mdi-truck-delivery"/>
-          Na putu
+          In delivery
         </h1>
         <v-col v-for="order in inDeliveryOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="U dostavi" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" status="In delivery" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -91,10 +91,10 @@ onMounted(async () => {
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
         <h1 class="text-h5 text-md-h4 mb-4 font-weight-medium">
           <v-icon icon="mdi-check-all"/>
-          Dostavljene
+          Delivered
         </h1>
         <v-col v-for="order in deliveredOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Dostavljena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -102,10 +102,10 @@ onMounted(async () => {
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
         <h1 class="text-h5 text-md-h4 mb-4 font-weight-medium">
           <v-icon icon="mdi-window-close"/>
-          Odbijene
+          Rejected
         </h1>
         <v-col v-for="order in rejectedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="Odbijena" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
       </v-col>
     </v-row>

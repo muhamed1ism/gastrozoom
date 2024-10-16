@@ -1,16 +1,17 @@
-const express = require('express');
-const prisma = require('../config/prisma');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
+import express from "express";
+import prisma from "../config/prisma.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import authenticateToken from "../middleware/authenticateToken.js";
+import authorizeAdmin from "../middleware/authorizeAdmin.js";
+
 const router = express.Router();
-const authenticateToken = require('../middleware/authenticateToken');
-const authorizeAdmin = require('../middleware/authorizeAdmin');
 
 dotenv.config();
 
 // register new user
-router.post('/register', async function(req, res) {
+router.post('/register', async (req, res) => {
   const { name, phoneNumber, email, password, role } = req.body;
 
   if (name.trim() === '' || phoneNumber.trim() === '' || email.trim() === '' || password.trim() === '') {
@@ -53,7 +54,7 @@ router.post('/register', async function(req, res) {
 });
 
 // login user
-router.post('/login', async function(req, res) {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -87,7 +88,7 @@ router.post('/login', async function(req, res) {
 });
 
 // get user data
-router.get('/me', authenticateToken, async function(req, res) {
+router.get('/me', authenticateToken, async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -108,12 +109,12 @@ router.get('/me', authenticateToken, async function(req, res) {
     res.status(200).json({ user });
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Nemoguće dohvatiti podatke korisnika' });
+    res.status(500).json({ error: 'Cannot fetch user data' });
   }
 });
 
 // get user data by id
-router.get('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
+router.get('/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -133,17 +134,17 @@ router.get('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
     res.status(200).json({ user });
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Nemoguće dohvatiti podatke korisnika' });
+    res.status(500).json({ error: 'Fetching user data failed' });
   }
 });
 
 // update user data
-router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
+router.put('/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, phoneNumber, email, role } = req.body;
 
   if (!name || !phoneNumber || !email) {
-    return res.status(400).json({ error: 'Sva polja su obavezna' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
@@ -162,19 +163,19 @@ router.put('/:id', authenticateToken, authorizeAdmin, async function(req, res) {
     res.status(200).json({ user: updatedUser });
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Ažuriranje podataka korisnika nije uspjelo' });
+    res.status(500).json({ error: 'Updating user data failed' });
   }
 });
 
 // logout user
-router.delete('/logout', authenticateToken, async function(req, res) {
+router.delete('/logout', authenticateToken, async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (token) {
     await prisma.revokedToken.create({
       data: { token },
     });
   }
-  res.status(200).json({ error: 'Korisnik se uspješno odjavio'});
+  res.status(200).json({ error: 'Logout successful' });
 });
 
-module.exports = router;
+export default router;

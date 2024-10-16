@@ -55,6 +55,10 @@ const decreaseQuantity = () => {
   }
 };
 
+const formattedPrice = computed(() => {
+  return food.value.price ? food.value.price.toFixed(2) : '0.00';
+});
+
 const addToBasket = async () => {
   if (!authStore.auth.isAuthenticated) {
     await router.push('/login');
@@ -96,7 +100,9 @@ watch(
         <v-card class="py-2 custom-shadow" variant="text" rounded="xl">
           <v-card-item class="">
             <v-img :src="food.imageUrl" class="bg-grey-lighten-2 align-center custom-radius aspect-ratio" width="100%">
-              <v-icon class="text-center w-100">mdi-image</v-icon>
+              <template #placeholder>
+                <v-icon class="text-center w-100 fill-height" size="3rem">mdi-image</v-icon>
+              </template>
             </v-img>
           </v-card-item>
           <v-card-title class="mx-4 text-h4 text-start text-wrap">{{ food.name }}</v-card-title>
@@ -114,24 +120,24 @@ watch(
                      @click="increaseQuantity"/>
             </div>
 
-            <v-card-text class="mx-4 text-end text-h5 font-weight-medium text-primary">Cijena: {{ food.price }} KM</v-card-text>
+            <v-card-text class="mx-4 text-end text-h5 font-weight-medium text-primary">$ {{ formattedPrice }} </v-card-text>
           </v-card-actions>
           <v-card-actions class="d-flex flex-column flex-sm-row justify-space-evenly">
             <v-btn color="primary" variant="tonal" prepend-icon="mdi-basket" min-width="48%" width="98%"
                    class="custom-radius w-sm-auto" @click="orderNow" size="large"
             >
-              Naruči odmah
+              Order now
             </v-btn>
             <v-btn v-if="!basketStore.basket.isFoodInBasket" color="primary" variant="flat" prepend-icon="mdi-basket-plus"
                    min-width="48%" width="98%" class="custom-radius w-sm-auto" @click="addToBasket" size="large"
             >
-              Dodaj u narudžbu
+              Add to order
             </v-btn>
             <v-btn v-if="basketStore.basket.isFoodInBasket" color="primary" variant="outlined"
                    prepend-icon="mdi-basket-remove-outline" min-width="48%" width="98%"
                    class="custom-radius w-sm-auto" @click="basketStore.removeFoodFromBasket(food.id)" size="large"
             >
-              Ukloni iz narudžbe
+              Remove from order
             </v-btn>
           </v-card-actions>
         </v-card>

@@ -75,18 +75,20 @@ onMounted(() => {
     <v-btn variant="plain" class="mt-3 mt-sm-0 ml-sm-2 pr-0 w-100 w-sm-auto justify-end justify-sm-center"
            @click="() => removeFoodFromBasket(props.id)"
     >
-      <span v-if="$vuetify.display.xs" class="text-h5 pr-2">Ukloni</span>
+      <span v-if="$vuetify.display.xs" class="text-h5 pr-2">Remove</span>
       <v-icon class="text-end text-sm-center" size="2rem">mdi-window-close</v-icon>
     </v-btn>
     <v-img :src="src" class="bg-grey-lighten-2 my-4 ma-sm-3 align-center custom-radius"
            :width="$vuetify.display.xs ? '100%' : '80px'" :height="$vuetify.display.xs ? '100px' : '80px'"
     >
-      <v-icon class="text-center w-100">mdi-image</v-icon>
+      <template #placeholder>
+        <v-icon class="text-center w-100">mdi-image</v-icon>
+      </template>
     </v-img>
     <div class="d-flex flex-column flex-sm-row w-100">
       <div>
         <v-card-title class="text-h6 text-start">{{ title }}</v-card-title>
-        <v-card-text class="text-h5 font-weight-medium text-start mr-sm-4 text-primary">{{ price }} KM</v-card-text>
+        <v-card-text class="text-h5 font-weight-medium text-start mr-sm-4 text-primary">$ {{ price.toFixed(2) }}</v-card-text>
       </div>
       <v-spacer/>
 

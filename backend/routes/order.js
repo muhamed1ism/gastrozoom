@@ -1,17 +1,18 @@
-const express = require('express');
-const prisma = require('../config/prisma');
-const authenticateToken = require("../middleware/authenticateToken");
-const authorizeAdmin = require("../middleware/authorizeAdmin");
-const authorizeWorker = require("../middleware/authorizeWorker");
+import express from "express";
+import prisma from "../config/prisma.js";
+import authenticateToken from "../middleware/authenticateToken.js";
+import authorizeAdmin from "../middleware/authorizeAdmin.js";
+import authorizeWorker from "../middleware/authorizeWorker.js";
+
 const router = express.Router();
 
 // create new order
-router.post('/create', authenticateToken, async function (req, res) {
+router.post('/create', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const {basketItems, addressId, deliveryPrice} = req.body;
 
   if (!userId || !basketItems || !addressId || !deliveryPrice) {
-    return res.status(400).json({ error: 'Sva polja su obavezna' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
@@ -22,7 +23,7 @@ router.post('/create', authenticateToken, async function (req, res) {
     });
 
     if (!address) {
-      return res.status(404).json({ error: 'Adresa nije pronađena' });
+      return res.status(404).json({ error: 'Address not found' });
     }
 
     let totalPrice = deliveryPrice;
@@ -36,7 +37,7 @@ router.post('/create', authenticateToken, async function (req, res) {
       });
 
       if (!food) {
-        return res.status(404).json({ error: `Hrana s ID-em ${foodId} nije pronađena` });
+        return res.status(404).json({ error: `Food with id ${foodItem.foodId} not found` });
       }
 
       const quantity = foodItem.quantity;
@@ -71,12 +72,12 @@ router.post('/create', authenticateToken, async function (req, res) {
     res.status(201).json(newOrder);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Kreiranje narudžbe nije uspjelo' });
+    res.status(500).json({ error: 'Error creating order' });
   }
 });
 
 // get all orders
-router.get('/all', authenticateToken, authorizeAdmin, async function (req, res) {
+router.get('/all', authenticateToken, authorizeAdmin, async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
 
@@ -86,12 +87,12 @@ router.get('/all', authenticateToken, authorizeAdmin, async function (req, res) 
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Dohvat narudžbi nije uspio' });
+    res.status(500).json({ error: 'Error fetching orders' });
   }
 });
 
 // get all user orders
-router.get('/user-all', authenticateToken, async function (req, res) {
+router.get('/user-all', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   try {
     const orders = await prisma.order.findMany({
@@ -103,12 +104,12 @@ router.get('/user-all', authenticateToken, async function (req, res) {
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Dohvat narudžbi nije uspio' });
+    res.status(500).json({ error: 'Error fetching orders' });
   }
 });
 
 // get order by id
-router.get('/:id', async function (req, res) {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -121,17 +122,17 @@ router.get('/:id', async function (req, res) {
     res.status(200).json(order);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Dohvat narudžbe nije uspio' });
+    res.status(500).json({ error: 'Error fetching order' });
   }
 });
 
 // update order by id
-router.put('/:id', authenticateToken, authorizeWorker, async function (req, res) {
+router.put('/:id', authenticateToken, authorizeWorker, async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
   if (!status) {
-    return res.status(400).json({ error: 'Status je obavezan' });
+    return res.status(400).json({ error: 'Status is required' });
   }
 
   try {
@@ -147,13 +148,13 @@ router.put('/:id', authenticateToken, authorizeWorker, async function (req, res)
     const translatedStatus = () => {
       switch (status) {
         case 'ACCEPTED':
-          return 'prihvaćena';
+          return 'accepted';
         case 'REJECTED':
-          return 'odbijena';
+          return 'rejected';
         case 'IN_DELIVERY':
-          return 'u pripremi';
+          return 'in delivery';
         case 'DELIVERED':
-          return 'isporučena';
+          return 'delivered';
         default:
           return '';
       }
@@ -162,8 +163,8 @@ router.put('/:id', authenticateToken, authorizeWorker, async function (req, res)
     await prisma.message.create({
       data: {
         userId: updatedOrder.userId,
-        title: 'Status narudžbe',
-        text: `Vaša narudžba ${updatedOrder.id} je ${translatedStatus()}`,
+        title: 'Order status update',
+        text: `Your order ${updatedOrder.id} is ${translatedStatus()}`,
         type: `ORDER_${status}`,
       },
     });
@@ -171,8 +172,8 @@ router.put('/:id', authenticateToken, authorizeWorker, async function (req, res)
     res.status(200).json(updatedOrder);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({ error: 'Ažuriranje narudžbe nije uspjelo' });
+    res.status(500).json({ error: 'Updating order failed' });
   }
 });
 
-module.exports = router;
+export default router;

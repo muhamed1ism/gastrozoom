@@ -12,17 +12,17 @@ onMounted(async () => {
 
 const menuItems = [
   {
-    title: 'Moje narudžbe',
+    title: 'My orders',
     prependIcon: 'mdi-cart',
     link: '/orders'
   },
   {
-    title: 'Adrese',
+    title: 'Address',
     prependIcon: 'mdi-map-marker',
     link: '/address'
   },
   {
-    title: 'O nama',
+    title: 'About',
     prependIcon: 'mdi-information',
     link: '/about'
   },
@@ -30,12 +30,12 @@ const menuItems = [
 
 const adminMenuItems = [
   {
-    title: 'Upravljanje ponudama',
+    title: 'Manage offers',
     prependIcon: 'mdi-store-edit',
     link: '/admin/offers'
   },
   {
-    title: 'Kreiraj obavjest',
+    title: 'Create notification',
     prependIcon: 'mdi-message-plus',
     link: '/admin/message/create'
   },
@@ -43,7 +43,7 @@ const adminMenuItems = [
 
 const workerMenuItems = [
   {
-    title: 'Upravljanje narudžbama',
+    title: 'Manage orders',
     prependIcon: 'mdi-cart-arrow-down',
     link: '/worker/orders'
   },
@@ -90,7 +90,7 @@ onMounted(async () => {
         <AccountMenuCard :link="item.link" :prepend-icon="item.prependIcon" :title="item.title"/>
       </v-col>
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
-        <AccountMenuCard @click="logout" prepend-icon="mdi-logout" title="Odjavi se"/>
+        <AccountMenuCard @click="logout" prepend-icon="mdi-logout" title="Log out"/>
       </v-col>
     </v-row>
   </v-container>

@@ -69,14 +69,14 @@ watch(
       <v-col cols="11" md="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h4 font-weight-medium">Detalji narudžbe</h1>
+          <h1 class="text-h4 font-weight-medium">Order details</h1>
         </div>
       </v-col>
     </v-row>
 
     <v-row v-if="foods.length === 0" justify="center">
       <v-col cols="11" md="8" lg="6">
-        <h3 class="text-center text-primary text-h3">Korpa je prazna</h3>
+        <h3 class="text-center text-primary text-h3">Cart is empty</h3>
       </v-col>
     </v-row>
 
@@ -92,19 +92,19 @@ watch(
       <v-col cols="11" md="8" lg="6">
         <v-card class="bg-primary d-flex flex-column pa-3" rounded="xl">
           <v-card-text class=" d-flex justify-space-between">
-            <span>Iznos:</span>
-            <span>{{ priceWithoutDelivery }} KM</span>
+            <span>Amount:</span>
+            <span>$ {{ priceWithoutDelivery.toFixed(2) }}</span>
           </v-card-text>
           <v-card-text class=" d-flex justify-space-between">
-            <span>Dostava:</span>
-            <span>{{ deliveryPrice }} KM</span>
+            <span>Delivery:</span>
+            <span>$ {{ deliveryPrice.toFixed(2) }}</span>
           </v-card-text>
           <v-divider opacity="60%" class="text-white"></v-divider>
           <v-card-text class=" d-flex justify-space-between">
-            <span>Za platiti:</span>
-            <span>{{ totalPrice }} KM</span>
+            <span>To pay:</span>
+            <span>$ {{ totalPrice.toFixed(2) }}</span>
           </v-card-text>
-          <v-btn class="mx-2 mb-2 text-primary" variant="flat" rounded size="x-large" @click="createOrder">Gotovo</v-btn>
+          <v-btn class="mx-2 mb-2 text-primary" variant="flat" rounded size="x-large" @click="createOrder">Done</v-btn>
         </v-card>
       </v-col>
     </v-row>

@@ -13,7 +13,6 @@ onMounted(
   async () => {
     await foodStore.fetchFoods();
     foods.value = foodStore.foods;
-    console.log(foods.value);
   }
 );
 
@@ -51,11 +50,11 @@ const sortByCategory = () => {
 };
 
 const filters = [
-  { icon: "mdi-chevron-up", title: "Cijena rastuće", action: sortByPriceAscending },
-  { icon: "mdi-chevron-down", title: "Cijena opadajuće", action: sortByPriceDescending },
-  { icon: "mdi-chevron-up", title: "Naziv rastuće", action: sortByNameAscending },
-  { icon: "mdi-chevron-down", title: "Naziv opadajuće", action: sortByNameDescending },
-  { icon: "mdi-shape", title: "Kategorija", action: sortByCategory },
+  { icon: "mdi-chevron-up", title: "Price ascending", action: sortByPriceAscending },
+  { icon: "mdi-chevron-down", title: "Price descending", action: sortByPriceDescending },
+  { icon: "mdi-chevron-up", title: "Name ascending", action: sortByNameAscending },
+  { icon: "mdi-chevron-down", title: "Name descending", action: sortByNameDescending },
+  { icon: "mdi-shape", title: "Category", action: sortByCategory },
 ];
 </script>
 
@@ -65,7 +64,7 @@ const filters = [
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton/>
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Ponude</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Offers</h1>
         </div>
       </v-col>
     </v-row>
@@ -75,7 +74,7 @@ const filters = [
           v-model="search"
           class="custom-text-field elevation-0 bg-secondary rounded-xl pl-8 pr-4"
           append-inner-icon="mdi-magnify"
-          label="Pretraži"
+          label="Search"
           variant="plain"
           density="comfortable"
           clearable
@@ -103,10 +102,10 @@ const filters = [
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3"
              class="d-flex justify-center mb-2" v-if="foods.length === 0"
       >
-        <h1 class="text-h4 text-sm-h3 text-primary text-center">Nema ponuda</h1>
+        <h1 class="text-h4 text-sm-h3 text-primary text-center">No offers</h1>
       </v-col>
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3" v-for="food in filteredFoods">
-        <FoodCard :id="food.id" :image-src="food.imageUrl" :title="food.name" :price="food.price"/>
+        <FoodCard :id="food.id" :imageSrc="food.imageUrl" :title="food.name" :price="food.price"/>
       </v-col>
     </v-row>
   </v-container>

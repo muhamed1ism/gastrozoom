@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const prisma = require('../config/prisma');
-const dotenv = require('dotenv');
+import jwt from 'jsonwebtoken';
+import prisma from '../config/prisma.js';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  if (token == null) return res.status(401).json({ error: 'Nije osiguran token' });
+  if (token == null) return res.status(401).json({ error: 'No token provided' });
 
   try {
     const revokedToken = await prisma.revokedToken.findUnique({
@@ -16,11 +16,11 @@ const authenticateToken = async (req, res, next) => {
     });
 
     if (revokedToken) {
-      return res.status(401).json({ message: 'Token nije više važeći' });
+      return res.status(401).json({ message: 'Token revoked' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (err) return res.status(403).json({ error: 'Nevažeći token' });
+      if (err) return res.status(403).json({ error: 'Invalid token' });
       req.user = user;
       next();
     });
@@ -29,4 +29,4 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-module.exports = authenticateToken;
+export default authenticateToken;

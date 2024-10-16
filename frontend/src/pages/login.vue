@@ -49,7 +49,7 @@ onMounted(async () => {
 <template>
   <v-container fluid class="fill-height bg-primary">
     <v-row>
-      <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3" class="pt-8">
+      <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
         <BackButton color="white"/>
       </v-col>
       <v-col cols="12" sm="8" md="6" lg="4" offset-sm="2" offset-md="3" offset-lg="4">
@@ -59,10 +59,12 @@ onMounted(async () => {
         </div>
 
         <v-form @submit.prevent="submit">
+          <v-label class="text-white opacity-80 ml-4 mb-1">Email</v-label>
           <v-text-field density="compact" placeholder="Email" prepend-inner-icon="mdi-email-outline" rounded
-                        variant="outlined" v-model="form.email" class="mb-1" append-inner-icon="."/>
+                        variant="outlined" v-model="form.email" append-inner-icon="."/>
 
-          <v-text-field placeholder="Unesite lozinku" v-model="form.password" :type="visible ? 'text' : 'password'"
+          <v-label class="text-white opacity-80 ml-4 mb-1">Password</v-label>
+          <v-text-field placeholder="Enter password" v-model="form.password" :type="visible ? 'text' : 'password'"
                         prepend-inner-icon="mdi-lock-outline" variant="outlined" rounded density="compact"
                         @focus="handleFocus" @blur="handleBlur" class="mb-4"
           >
@@ -79,14 +81,14 @@ onMounted(async () => {
           </v-alert>
 
           <v-btn type="submit" block variant="flat" color="white" size="large" class="mb-8 text-primary mt-2" rounded>
-            Prijavi se
+            Login
           </v-btn>
         </v-form>
 
         <div class="text-center">
-          <span>Nemate račun?</span>
+          <span>Don't have an account?</span>
           <RouterLink class="text-white font-weight-medium text-decoration-none pl-1" to="/register">
-            Kreirajte novi!
+            Register
           </RouterLink>
         </div>
       </v-col>

@@ -47,7 +47,7 @@ const deleteAllMessages = async () => {
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Obavjesti</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Notifications</h1>
         </div>
       </v-col>
     </v-row>
@@ -62,7 +62,7 @@ const deleteAllMessages = async () => {
       <v-col cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3"
              class="d-flex justify-center mb-2" v-if="messages.length === 0"
       >
-        <h1 class="text-h4 text-sm-h3 text-primary text-center">Nema obavjesti</h1>
+        <h1 class="text-h4 text-sm-h3 text-primary text-center">No notifications</h1>
       </v-col>
       <v-col v-for="message in messages" cols="12" sm="10" md="8" lg="6" offset-sm="1" offset-md="2" offset-lg="3">
           <v-card :key="message.id" class="d-flex mb-8 align-center custom-shadow" rounded="xl" variant="text">

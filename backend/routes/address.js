@@ -1,16 +1,17 @@
-const express = require('express');
-const prisma = require('../config/prisma');
-const authenticateToken = require("../middleware/authenticateToken");
+import express from "express";
+import prisma from "../config/prisma.js";
+import authenticateToken from "../middleware/authenticateToken.js";
+
 const router = express.Router();
 
 // create new address
-router.post('/create', authenticateToken, async function (req, res) {
+router.post('/create', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const {address, addressNumber, floorNumber, isSelectedOnDoor} = req.body;
   let {isPrimary} = req.body;
 
   if (!userId || !address) {
-    return res.status(400).json({error: 'Sva polja su obavezna'});
+    return res.status(400).json({ error: 'Address is required' });
   }
 
   const primaryExists = await prisma.address.findFirst({
@@ -43,12 +44,12 @@ router.post('/create', authenticateToken, async function (req, res) {
     res.status(201).json(newAddress);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u kreiranju adrese'});
+    res.status(500).json({ error: 'Creating address failed' });
   }
 });
 
 // get all addresses
-router.get('/all', authenticateToken, async function (req, res) {
+router.get('/all', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   try {
     const addresses = await prisma.address.findMany({
@@ -60,12 +61,12 @@ router.get('/all', authenticateToken, async function (req, res) {
     res.status(200).json(addresses);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u dohvatanju adresa'});
+    res.status(500).json({ error: 'Error fetching addresses' });
   }
 });
 
 // get address with isPrimary true
-router.get('/primary', authenticateToken, async function (req, res) {
+router.get('/primary', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   try {
     const address = await prisma.address.findFirst({
@@ -78,12 +79,12 @@ router.get('/primary', authenticateToken, async function (req, res) {
     res.status(200).json(address);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u dohvatanju adrese'});
+    res.status(500).json({ error: 'Error fetching primary address' });
   }
 });
 
 // get address by id
-router.get('/:id', authenticateToken, async function (req, res) {
+router.get('/:id', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const {id} = req.params;
 
@@ -98,18 +99,18 @@ router.get('/:id', authenticateToken, async function (req, res) {
     res.status(200).json(address);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u dohvatanju adrese'});
+    res.status(500).json({ error: 'Error fetching address' });
   }
 });
 
 // update address by id
-router.put('/:id', authenticateToken, async function (req, res) {
+router.put('/:id', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const {id} = req.params;
   const {address, addressNumber, floorNumber, isPrimary, isSelectedOnDoor } = req.body;
 
   if (!address) {
-    return res.status(400).json({error: 'Adresa je obavezna'});
+    return res.status(400).json({ error: 'Address is required' });
   }
 
   try {
@@ -130,12 +131,12 @@ router.put('/:id', authenticateToken, async function (req, res) {
     res.status(200).json(updatedAddress);
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u ažuriranju adrese'});
+    res.status(500).json({ error: 'Error updating address' });
   }
 });
 
 // delete address by id
-router.delete('/:id', authenticateToken, async function (req, res) {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const {id} = req.params;
 
@@ -147,11 +148,11 @@ router.delete('/:id', authenticateToken, async function (req, res) {
       },
     });
 
-    res.status(200).json({message: 'Adresa je uspešno obrisana'});
+    res.status(200).json({ message: 'Address deleted' });
   } catch (error) {
     console.error('Error: ', error);
-    res.status(500).json({error: 'Greška u brisanju adrese'});
+    res.status(500).json({ error: 'Error deleting address' });
   }
 });
 
-module.exports = router;
+export default router;

@@ -36,46 +36,46 @@ watch(
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Moja adresa</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">My address</h1>
         </div>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="10" sm="8" md="6" lg="4" offset="1" offset-sm="2" offset-md="3" offset-lg="4">
-        <v-card variant="text">
+        <v-card variant="text" class="mb-16">
           <v-icon size="8rem" class="text-center text-primary w-100 mb-10">mdi-map-marker</v-icon>
           <v-card-text>
-            <h6 class="text-h6 font-weight-bold">Naziv ulice</h6>
+            <h6 class="text-h6 font-weight-bold">Street name</h6>
             <h5 class="text-h5">{{ address.address }}</h5>
           </v-card-text>
 
           <v-row>
             <v-col cols="6">
               <v-card-text>
-                <h6 class="text-h6 font-weight-bold">Kućni broj</h6>
+                <h6 class="text-h6 font-weight-bold">Home number</h6>
                 <h5 class="text-h5">{{ address.addressNumber }}</h5>
               </v-card-text>
             </v-col>
             <v-col cols="6">
               <v-card-text>
-                <h6 class="text-h6 font-weight-bold">Kat</h6>
+                <h6 class="text-h6 font-weight-bold">Floor</h6>
                 <h5 class="text-h5">{{ address.floorNumber }}</h5>
               </v-card-text>
             </v-col>
           </v-row>
 
           <v-card-text>
-            <h6 class="text-h6 font-weight-bold">Način dostave</h6>
-            <h5 class="text-h5">{{ address.isSelectedOnDoor ? 'Dostaviti na vratima' : 'Preuzet ću ja' }}</h5>
+            <h6 class="text-h6 font-weight-bold">Delivery method</h6>
+            <h5 class="text-h5">{{ address.isSelectedOnDoor ? 'Deliver to the door' : "I'll pick it up" }}</h5>
           </v-card-text>
 
           <div v-if="addressStore.addresses.length > 1" class="d-flex justify-space-between mx-2 align-center">
-            <span>Postavi kao zadanu adresu</span>
+            <span>Set as default address</span>
             <v-switch color="primary" class="ml-2 mt-6" v-model="address.isPrimary"/>
           </div>
 
           <v-btn type="submit" :to="`/address/${addressId}/edit`" prepend-icon="mdi-pencil" block variant="flat" color="primary" size="large" class="mb-8 mt-4" rounded>
-            Uredi adresu
+            Edit address
           </v-btn>
         </v-card>
       </v-col>

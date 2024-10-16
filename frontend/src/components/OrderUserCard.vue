@@ -11,7 +11,7 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Narudžba',
+    default: 'Order',
   },
   totalPrice: {
     type: String,

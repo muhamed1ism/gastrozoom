@@ -42,7 +42,7 @@ model Food {
   description String?
   price       Float
   imageUrl    String
-  category    FoodCategory @default(GLAVNO_JELO)
+  category    FoodCategory @default(MAIN_DISH)
 }
 
 model Order {
@@ -101,13 +101,13 @@ enum OrderStatus {
 }
 
 enum FoodCategory {
-  PREDJELO
-  GLAVNO_JELO
-  DESERT
-  NAPITAK
-  PRILOG
-  SALATA
-  JUHA
+  APPETIZER
+  MAIN_DISH
+  DESSERT
+  DRINK
+  SIDE_DISH
+  SALAD
+  SOUP
 }
 
 enum MessageType {

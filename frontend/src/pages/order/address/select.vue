@@ -38,11 +38,11 @@ const selectAddress = (address) => {
 const createOrder = async () => {
   try {
     if (basketStore.basket.basketItems.length === 0) {
-      alert('Košarica je prazna');
+      alert('Cart is empty');
       return;
     }
     if (!selectedAddress.value) {
-      alert('Molimo odaberite adresu');
+      alert('Please select address');
       return;
     }
     const order = {
@@ -67,7 +67,7 @@ const createOrder = async () => {
       <v-col cols="12" sm="10" md="8" lg="6" class="d-flex">
         <BackButton />
         <div class="d-flex align-center pl-6">
-          <h1 class="text-h5 text-md-h4 font-weight-medium">Odaberi adresu</h1>
+          <h1 class="text-h5 text-md-h4 font-weight-medium">Select address</h1>
         </div>
       </v-col>
     </v-row>
@@ -76,20 +76,20 @@ const createOrder = async () => {
         <v-card class="custom-radius custom-shadow pa-4">
           <v-card-title class="d-flex align-center text-h5 text-sm-h4 text-start mb-4">
             <v-icon class="text-center text-primary mr-2">mdi-map-marker</v-icon>
-            Adresa za dostavu
+            Delivery address
           </v-card-title>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start">
-            <span class="font-weight-medium">Naziv ulice:</span> {{ selectedAddress.value?.address }}
+            <span class="font-weight-medium">Street name:</span> {{ selectedAddress.value?.address }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start">
-            <span class="font-weight-medium">Kućni broj:</span> {{ selectedAddress.value?.addressNumber }}
+            <span class="font-weight-medium">Home number:</span> {{ selectedAddress.value?.addressNumber }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start">
-            <span class="font-weight-medium">Kat:</span> {{ selectedAddress.value?.floorNumber }}
+            <span class="font-weight-medium">Floor:</span> {{ selectedAddress.value?.floorNumber }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start">
-            <span class="font-weight-medium">Način dostave:</span>
-            {{ selectedAddress.value?.isSelectedOnDoor ? 'Dostaviti na vratima' : 'Preuzet ću ja' }}
+            <span class="font-weight-medium">Delivery method:</span>
+            {{ selectedAddress.value?.isSelectedOnDoor ? 'Deliver to the door' : "I'll pick it up" }}
           </v-card-text>
         </v-card>
         <div class="gap flex-column mt-8 flex-sm-row">
@@ -101,17 +101,20 @@ const createOrder = async () => {
               </v-btn>
             </template>
             <v-list rounded="xl" elevation="0" bg-color="primary" variant="flat">
-              <v-list-item class="bg-primary" v-for="address in allAddresses" :key="address.id" @click="selectAddress(address)">
+              <v-list-item class="bg-primary" v-for="address in allAddresses" :key="address.id"
+                           @click="selectAddress(address)"
+              >
 
                 <v-list-item-title>{{ address.address }}</v-list-item-title>
-                <v-list-item-subtitle opacity="70%">Kućni broj: {{ address.addressNumber }}, Kat: {{ address.floorNumber }}</v-list-item-subtitle>
+                <v-list-item-subtitle opacity="70%">Home number: {{ address.addressNumber }},
+                  Floor: {{ address.floorNumber }}</v-list-item-subtitle>
 
               </v-list-item>
             </v-list>
           </v-menu>
           <v-btn class="my-2 custom-radius" :width="$vuetify.display.xs ? '100%' : '48%'" color="primary"
                  variant="flat" @click="createOrder" append-icon="mdi-chevron-right" size="large">
-            Naruči
+            Order
           </v-btn>
         </div>
 

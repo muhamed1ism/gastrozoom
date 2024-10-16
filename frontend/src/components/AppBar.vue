@@ -11,28 +11,28 @@ const authStore = useAuthStore();
 const guestItems = [
   {
     id: 'home',
-    text: 'Početna',
+    text: 'Home',
     icon: 'mdi-home',
     to: '/',
     color: 'primary',
   },
   {
     id: 'offers',
-    text: 'Ponude',
+    text: 'Offers',
     icon: 'mdi-basket',
     to: '/offers',
     color: 'primary',
   },
   {
     id: 'about',
-    text: 'O nama',
+    text: 'About',
     icon: 'mdi-information',
     to: '/about',
     color: 'primary',
   },
   {
     id: 'login',
-    text: 'Prijava',
+    text: 'Login',
     icon: 'mdi-login',
     to: '/login',
     color: 'white',
@@ -42,28 +42,28 @@ const guestItems = [
 const userItems = [
   {
     id: 'home',
-    text: 'Početna',
+    text: 'Home',
     icon: 'mdi-home',
     to: '/',
     color: 'primary',
   },
   {
     id: 'offers',
-    text: 'Ponude',
+    text: 'Offers',
     icon: 'mdi-basket',
     to: '/offers',
     color: 'primary',
   },
   {
     id: 'messages',
-    text: 'Obavjesti',
+    text: 'Notifications',
     icon: 'mdi-message-text',
     to: '/messages',
     color: 'primary',
   },
   {
     id: 'account',
-    text: 'Račun',
+    text: 'Account',
     icon: 'mdi-account',
     to: '/account',
     color: 'primary',
@@ -123,7 +123,7 @@ onMounted(() => {
 
     <v-btn v-if="isAuthenticated" @click="logout" color="secondary" class="me-2 text-none" variant="outlined" rounded="lg">
       <v-icon>mdi-logout</v-icon>
-      <span>Odjava</span>
+      <span>Log out</span>
     </v-btn>
   </v-app-bar>
 
@@ -143,6 +143,16 @@ onMounted(() => {
         >
           <v-icon>{{ button.icon }}</v-icon>
           <span>{{ button.text }}</span>
+        </v-btn>
+        <v-btn
+          to="/order"
+          :size="$vuetify.display.smAndUp ? 'small' : 'x-small'"
+          rounded="lg"
+          color="primary"
+          class="text-primary mx-0 mx-sm-1"
+        >
+          <v-icon>mdi-cart</v-icon>
+          <span>Order</span>
         </v-btn>
       </v-col>
     </v-row>
