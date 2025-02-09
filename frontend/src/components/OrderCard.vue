@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     default: 'Narudžba',
   },
+  items: {
+    type: Array,
+    default: [],
+  },
   totalPrice: {
     type: String,
     default: '0',
@@ -27,23 +31,32 @@ const formatDateAndTime = (date) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
   return new Date(date).toLocaleDateString('hr-HR', options);
 };
+
+const itemsNames = computed(() => props.items.map(item => item.foodName).join(', '));
 </script>
 
 <template>
   <RouterLink :to="`/worker/orders/${props.id}`"  class="text-decoration-none">
     <v-card class="d-flex align-center mb-2 pa-2 custom-shadow" rounded="xl" variant="text">
-      <div class="d-flex flex-column align-center justify-start">
+      <div class="d-block align-center justify-start">
         <v-card-title class="text-h6 text-sm-h5 text-start text-black">
           {{ title }} #{{ id }}
         </v-card-title>
+
         <v-card-subtitle class="text-subtitle-2 text-sm-subtitle-1 text-black">
           {{ formatDateAndTime(createdAt) }}
         </v-card-subtitle>
+
+        <v-card-text class="text-subtitle-1 text-black text-wrap">
+          {{ itemsNames }}
+        </v-card-text>
+
         <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
           Status: {{ status }}
         </v-card-text>
       </div>
-      <v-card-text class="w-100 w-sm-auto text-end text-h5 text-sm-h4 font-weight-medium text-end mr-sm-4 mt-3 text-primary">
+
+      <v-card-text class="w-100 w-sm-auto text-end text-no-wrap text-h5 text-sm-h4 font-weight-medium text-end mr-sm-4 mt-3 text-primary">
         {{ totalPrice }} KM
       </v-card-text>
     </v-card>

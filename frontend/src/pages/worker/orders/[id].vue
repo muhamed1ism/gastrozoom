@@ -9,18 +9,29 @@ import router from "@/router";
 const route = useRoute();
 const orderId = route.params.id;
 const order = ref({});
+const orderItems = ref([]);
 
 const orderStore = useOrderStore();
 
 onMounted(async () => {
   await orderStore.fetchOrderById(orderId);
+  await orderStore.fetchOrderItems(orderId);
   order.value = orderStore.order;
+  orderItems.value = orderStore.orderItems;
+  console.log(orderItems.value);
 });
 
 const updateOrderStatus = async (newStatus) => {
   await orderStore.updateOrder(orderId, newStatus);
   window.location.reload();
 };
+
+const headers = [
+  { title: "ID", text: "ID", value: "id", sortable: true },
+  { title: "Name", text: "Name", value: "name", sortable: true },
+  { title: "Quantity", text: "Quantity", value: "quantity", sortable: true },
+  { title: "Price", text: "Price", value: "price", sortable: true },
+];
 
 const statusTranslations = {
   CREATED: 'Created',
@@ -67,12 +78,29 @@ onMounted(async () => {
             <span class="font-weight-medium">Status:</span> {{ translatedStatus }}
           </v-card-text>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
-            <span class="font-weight-medium">Total price:</span> {{ order.totalPrice }} KM
-          </v-card-text>
-          <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
             <span class="font-weight-medium">Address:</span> {{ order.address }} {{ order.addressNumber }},
             <span class="font-weight-medium">Floor:</span> {{ order.floorNumber }}
           </v-card-text>
+          <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 text-grey-darken-3">
+            <span class="font-weight-medium">Total price:</span> {{ order.totalPrice }} KM
+          </v-card-text>
+          <v-col class="12" sm="10" lg="8" offset-sm="1" offset-lg="2">
+            <v-data-table :headers="headers" :items="orderItems" multi-sort :items-per-page="10">
+
+              <template v-slot:item.name="{ item }">
+                <div class="truncate-name-column">{{ item.foodName }}</div>
+              </template>
+
+              <template v-slot:item.price="{ item }">
+                <div class="truncate-name-column">$ {{ item.foodPrice.toFixed(2) }}</div>
+              </template>
+
+              <template v-slot:no-data>
+                <p>No food</p>
+              </template>
+
+            </v-data-table>
+          </v-col>
           <v-card-text class="text-subtitle-1 text-sm-h6 text-start mt-3 mx-4 text-grey-darken-3">
             <ul v-for="item in order.orderItems">
               <li :key="item.id">

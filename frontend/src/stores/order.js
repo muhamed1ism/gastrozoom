@@ -8,6 +8,7 @@ export const useOrderStore = defineStore('order', {
   state: () => ({
     orders: [],
     order: null,
+    orderItems: [],
   }),
 
   actions: {
@@ -61,6 +62,25 @@ export const useOrderStore = defineStore('order', {
         }
       } catch (error) {
         console.log("Failed to fetch order: ", error);
+        throw error;
+      }
+    },
+
+    async fetchOrderItems(id) {
+      try {
+        const authStore = useAuthStore();
+        const token = authStore.auth.token;
+        const res = await axios.get(`${apiUrl}/${id}/items`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          this.orderItems = res.data;
+          return res.data;
+        }
+      } catch (error) {
+        console.log("Failed to fetch order items: ", error);
         throw error;
       }
     },

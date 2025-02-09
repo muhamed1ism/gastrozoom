@@ -7,7 +7,7 @@ import {useFoodStore} from "@/stores/food";
 const authStore = useAuthStore();
 const foodStore = useFoodStore();
 
-const form = ref({
+const form = ref( {
   name: "",
   description: "",
   category: "",

@@ -11,6 +11,11 @@ const orders = ref([]);
 onMounted(async () => {
   await orderStore.fetchUserOrders();
   orders.value = orderStore.orders;
+
+  for(const order of orders.value) {
+    order.items = await orderStore.fetchOrderItems(order.id);
+  }
+
   console.log(orders.value);
 });
 
@@ -52,7 +57,7 @@ const rejectedOrders = computed(() => {
           Created
         </h1>
         <v-col v-for="order in createdOrders" class="mb-2">
-          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -63,7 +68,7 @@ const rejectedOrders = computed(() => {
           Accepted
         </h1>
         <v-col v-for="order in acceptedOrders" class="mb-2">
-          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -74,7 +79,7 @@ const rejectedOrders = computed(() => {
           In delivery
         </h1>
         <v-col v-for="order in inDeliveryOrders" class="mb-2">
-          <OrderUserCard :createdAt="order.createdAt" status="In delivery" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" status="In delivery" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -85,7 +90,7 @@ const rejectedOrders = computed(() => {
           Delivered
         </h1>
         <v-col v-for="order in deliveredOrders" class="mb-2">
-          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -96,7 +101,7 @@ const rejectedOrders = computed(() => {
           Rejected
         </h1>
         <v-col v-for="order in rejectedOrders" class="mb-2">
-          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderUserCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
       </v-col>
     </v-row>

@@ -14,6 +14,11 @@ const orders = ref([]);
 onMounted(async () => {
   await orderStore.fetchAllOrders();
   orders.value = orderStore.orders;
+
+  for(const order of orders.value) {
+    order.items = await orderStore.fetchOrderItems(order.id);
+  }
+
   console.log(orders.value);
 });
 
@@ -61,7 +66,7 @@ onMounted(async () => {
           Created
         </h1>
         <v-col v-for="order in createdOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -72,7 +77,7 @@ onMounted(async () => {
           Accepted
         </h1>
         <v-col v-for="order in acceptedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -83,7 +88,7 @@ onMounted(async () => {
           In delivery
         </h1>
         <v-col v-for="order in inDeliveryOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" status="In delivery" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" status="In delivery" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -94,7 +99,7 @@ onMounted(async () => {
           Delivered
         </h1>
         <v-col v-for="order in deliveredOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
         <v-divider/>
       </v-col>
@@ -105,7 +110,7 @@ onMounted(async () => {
           Rejected
         </h1>
         <v-col v-for="order in rejectedOrders" class="mb-2">
-          <OrderCard :createdAt="order.createdAt" :status="order.status" :id="order.id" :total-price="order.totalPrice"/>
+          <OrderCard :createdAt="order.createdAt" :status="order.status" :items="order.items" :id="order.id" :total-price="order.totalPrice"/>
         </v-col>
       </v-col>
     </v-row>

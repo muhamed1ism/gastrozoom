@@ -126,6 +126,23 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/items', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const orderItems = await prisma.orderItem.findMany({
+      where: {
+        orderId: Number(id),
+      },
+    });
+
+    res.status(200).json(orderItems);
+  } catch (error) {
+    console.error('Error: ', error);
+    res.status(500).json({ error: 'Error fetching order items' });
+  }
+});
+
 // update order by id
 router.put('/:id', authenticateToken, authorizeWorker, async (req, res) => {
   const { id } = req.params;
